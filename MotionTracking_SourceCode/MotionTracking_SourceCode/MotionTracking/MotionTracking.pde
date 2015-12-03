@@ -46,7 +46,7 @@ int portSend = 7400;
 void setup() {
   size(520, 240);
   frameRate(30);
-  font = loadFont("ArialMT-32.vlw");
+  //font = loadFont("ArialMT-32.vlw");
 
   //Setup OSC
   //Set listening port
@@ -148,7 +148,7 @@ void drawInterface() {
   }
   rect(10, 23, mapMotionVal, 15);
 
-  textFont(font, 12);  
+  //textFont(font, 12);  
   fill(230, 230, 230, 230);
   text("Final Motion Value: "+ finalMotionVal, 5, 13);
 
@@ -165,7 +165,7 @@ void drawInterface() {
   text("Send IP Address: " + ipAddress, 5, 140);
   text("Send Port Number: " + portSend, 5, 160);  
 
-  textFont(font, 16);
+  //textFont(font, 16);
   text("fps: " + frameRate, 205, height-10);
 }
 
