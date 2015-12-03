@@ -1,4 +1,5 @@
 var leo;  //hero
+var lev = 1;
 
 
 function setup(){
@@ -18,8 +19,15 @@ function draw(){
 	background(0);
     
     //hero methods on level 1
-    leo.borders();
-    leo.update();  
-    leo.display(blue, lev1_size);
+    if(lev = 1){
+        /*help beat Social Anxiety Disorder
+        decrease the percentage of people suffering
+        from SAD by 
+        getting from A to B following the rules   
+        */
+        leo.borders();
+        leo.update();  
+        leo.display(blue, lev1_size);
+    }
 }
 
