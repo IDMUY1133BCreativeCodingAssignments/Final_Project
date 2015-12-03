@@ -11,6 +11,10 @@ int topLx, topLy, topCx, topCy, topRx, topRy; // values for kickbox top row
 int midLx, midLy, midCx, midCy, midRx, midRy; // values for kickbox mid row
 int botLx, botLy, botCx, botCy, botRx, botRy; // values for kickbox bot row
 
+// variables for monitoring
+int bassAmp, kickboxSensitivity;
+int beepAmp;
+
 
 void setup() {
   // create window in 720p and with Z-axis
@@ -21,28 +25,44 @@ void setup() {
   minim = new Minim(this);
 
   // load the audio track in data directory
-  player = minim.loadFile("forever.mp3", 1024);
+  player = minim.loadFile("expand.mp3", 1024);
 
   // FFT object with time domain buffer
   fft = new FFT(player.bufferSize(), player.sampleRate());
+
+  kickboxSensitivity = 150;
+  println("Kickbox Sensitivity is " + kickboxSensitivity);
 }
+
+// ****----//// DRAW \\\\----****
 
 void draw() {
   background(0);
-  stroke(255);
+
   fft.forward(player.mix); // initiate FFT on player
-  int onKick = int(fft.calcAvg(48, 51));
-  kickbox(50, onKick);
-  text(onKick, mouseX, mouseY);
-  if (onKick<1) {
-    ellipse(width/2, height/2, 100, 100);
-  }
+  bassAmp = int(fft.getFreq(50)); // analyse amplitude of 50Hz
+  beepAmp = int(fft.getFreq(1130))*10; // WIP:analyse beep
+
+  // kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
+  kickbox(50, bassAmp, "cool", 20);
+  
+  //WIP SECTION, TESTING "BEEPS"
+  fill(255);
+  stroke(255);
+  strokeWeight(1);
+  if(beepAmp>130){
+  ellipse(random(0,width),random(0,height/2),beepAmp,beepAmp);}
+  text(beepAmp, mouseX, mouseY);
+  
 }
 
-// ****----//// AUDIO \\\\----****
+// ****----//// END DRAW \\\\----****
 
-// press SPACEBAR to start playing
+// ****----//// KEYPRESS EVENTS \\\\----****
+
 void keyPressed() {
+
+  // for player, spacebar is start song
   if (key == ' ') {
     if (player.isPlaying()) {
       player.pause();
@@ -53,16 +73,30 @@ void keyPressed() {
       player.play();
     }
   }
+
+  // for kickbox sensitivity, up is +10, left is -10, used in kickbox() function
+  if (key == CODED) {
+    if (keyCode == UP) {
+      kickboxSensitivity = kickboxSensitivity + 10;
+      println("Sensitivity is " + kickboxSensitivity);
+    }
+  }
+  if (key == CODED) {
+    if (keyCode == DOWN) {
+      kickboxSensitivity = kickboxSensitivity - 10;
+      println("Sensitivity is " + kickboxSensitivity);
+    }
+  }
 }
 
-// ****----//// END AUDIO \\\\----****
+// ****----//// END KEYPRESS EVENTS \\\\----****
 
 
 
 // ****----//// GRAPHICS \\\\----****
 
 // kickbox (graphic on beat)
-void kickbox(int margin, int kickjerk) {
+void kickbox(int margin, int kickjerk, String colorMode, int thickness) {
 
   // top row
   topLx = margin+int(random(-kickjerk, kickjerk));
@@ -87,6 +121,23 @@ void kickbox(int margin, int kickjerk) {
   botCy = height-margin+int(random(-kickjerk, kickjerk));
   botRx = width-margin+int(random(-kickjerk, kickjerk));
   botRy = height-margin+int(random(-kickjerk, kickjerk));
+
+  // stroking
+  if (colorMode == "cool") {
+    if (bassAmp>kickboxSensitivity) {
+      stroke(0, random(200, 255), random(150, 255), 230);
+    } else { 
+      noStroke();
+    }
+  }
+  if (colorMode == "warm") {
+    if (bassAmp>kickboxSensitivity) {
+      stroke(random(180, 255), random(50, 75), random(30, 60), 230);
+    } else { 
+      noStroke();
+    }
+  }
+  strokeWeight(random(thickness, thickness+10));
 
   // horizontal lines
   line(topLx, topLy, topCx, topCy);
