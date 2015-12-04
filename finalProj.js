@@ -27,18 +27,18 @@ var white;
 var black;
 var whichColor; 
 
-var ballLocX;
-var ballLocY;
+var ballLocX = 49;
+var ballLocY = 25;
 
 //var second = second(); //not working yet 
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
-    background(0);
+    background(255);
     angleMode(DEGREES);
     //the colors that you can choose from
-     ballLocX = windowWidth / 2;
-     ballLocY = windowHeight / 2;
+     //ballLocX = windowWidth / 2;
+     //ballLocY = windowHeight / 2;
      red = color(255, 0, 0);
      orange = color(204, 102, 0);
      yellow = color(204, 153, 0);
@@ -51,10 +51,11 @@ function setup(){
 }
 
 function draw(){
-    noStroke();
+    background(255);
     fill(green);
-    //airBreath();
-    fireBreath();
+    //earthBreath();
+   airBreath();
+    //fireBreath();
 }
 
 function palette(){ 
@@ -74,16 +75,32 @@ function chooseColor(){
 }
 
 function airBreath(){
-    background(blue);
+    
+    noFill();
+    stroke(255, 102, 0);
+   // line(85, 20, 10,10);
+    //line(90, 90, 15, 80);
+    stroke(0, 0, 0);
+    bezier(70, 15, 5, 10, 90, 90, 35, 80);
     fill(red);
+    push();
+    noStroke();
+    triangle(50, 40, 45, 50, 55, 50);
+    ellipse(ballLocX, ballLocY, 25, 35);
+    pop();
+   // ballLocY++;
+    //fill(red);
+    
+    /*
     while(second > 0 && second < 4)
     ballLocY--;
     ellipse(ballLocX, ballLocY, 50, 50);
-    
+    */
 }
 
 function earthBreath(){
-    
+    fill(green);
+    rect(windowWidth - 100, 0, 100, windowHeight);
 }
 
 function fireBreath(){
