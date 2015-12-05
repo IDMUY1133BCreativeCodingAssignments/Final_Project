@@ -1,76 +1,43 @@
-function Hero(_maxSpeed){
+function Hero(_maxSpeed, lev_size){
     
-    this.startX = 60;
-    this.startY = 700;
-    this.x = this.startX;
-    this.y = this.startY;
-    this.speed = 2;
-    this.acceleration = 1.2;
+    this.hero = createSprite(windowWidth, windowHeight, lev_size, lev_size);  //our hero sprite
+  
+    this.heroAnim = this.hero.addAnimation("floating", "assets/ghost_standing0001.png", "assets/ghost_standing0007.png"); //floating animation
+    this.heroAnim.offY = 18;
+    
+    this.hero.addAnimation("moving", "assets/ghost_walk0001.png", "assets/ghost_walk0004.png");  //walk cycle
 
     this.maxSpeed = _maxSpeed;  //how fast do we allow hero to go
     this.acceleration_limit = 30;  //tracking and limiting for how long the user can boost the velocity
 }
 
 Hero.prototype.update = function(){
+    this.hero.velocity.x = (camera.mouseX-this.hero.position.x)/10;  //utilizing the virtual camera
+    this.hero.velocity.y = (camera.mouseY-this.hero.position.y)/10;
     
-    function keyPressed(){
-        if(keyCode === UP_ARROW){
-            this.y = this.y-this.speed;
-        }
-        
-        if(keyCode === DOWN_ARROW){
-            this.y = this.y+this.speed;
-        }
-        
-        if(keyCode === LEFT_ARROW){
-            this.x = this.x-this.speed;
-        }
-        
-        if(keyCode === RIGHT_ARROW){
-            this.x = this.x+this.speed;
-        }
-    }
-    
-    /*if(keyPressed = "32"){
-        this.speed = this.speed*this.acceleration;
-        this.acceleration_limit -= 1;
-        
-        var acc_limit = createSprite(750, 750, 15, this.acceleration_limit); //acceleration limit status bar
-        
-        if(this.acceleration_limit = 0){
-            character = createSprite(this.startX, this.startY, lev_size, lev_size);  //set the character back 
-                                                                            if limit is reached 
-        }
-    }
-    
-    if(this.speed > _maxSpeed){
-        this.speed = _maxSpeed;
-    }
-    
-    */
+    text(this.hero.velocity.x, 200, 200); //printing out the speed, so we can start thinking about limiting it, boosting it, etc 
           
 }
 
-Hero.prototype.borders = function(){  //making sure the Hero stays within the borders
+Hero.prototype.borders = function(){  //constraining our hero
     
-    if(this.x < 0){
-        this.x = 0;
-    } 
-    if(this.y < 0){
-     this.y = 0;
-    }
-    if (this.x > width){
-     this.x = width;
-    }
-    if (this.y > height) {
-        this.y = height;
-    }
+  if(this.hero.position.x < 0)
+    this.hero.position.x = 0;
+  if(this.hero.position.y < 0)
+    this.hero.position.y = 0;
+  if(this.hero.position.x > SCENE_W)
+    this.hero.position.x = SCENE_W;
+  if(this.hero.position.y > SCENE_H)
+    this.hero.position.y = SCENE_H;
 }
 
-Hero.prototype.display = function(c, lev_size){  //takes the parameter of color and size for according 
-                                                    //to the level of the hero character 
+Hero.prototype.display = function(){  
+    
+    //shadow using p5 drawing
     noStroke();
-    fill(c);
-    var character = createSprite(this.x, this.y, lev_size, lev_size);
-    drawSprites();
+    fill(0,0,0,20);
+    //shadow
+    ellipse(this.hero.position.x, this.hero.position.y+90, 80, 30);
+    //character on the top
+    drawSprite(this.hero);
 }
