@@ -64,7 +64,6 @@ var flamesPressed = false;
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
-    angleMode(DEGREES);
     
     //the colors that you can choose from
     red = color(255, 144, 134);
@@ -96,6 +95,8 @@ function setup(){
 }
 
 function draw(){
+    var currentTime = millis();
+    
     if(balloonPressed){ 
         airBreath(); 
     }
@@ -152,8 +153,10 @@ function draw(){
 
 /*
 the purpose of the next four functions is to prevent multiple breathing exercises running at once. 
+it also restarts all the values
 */
 function baPressed(){
+    translateY = 10;
     balloonPressed = true;
     bubblesPressed = false;
     flamesPressed = false;
@@ -161,6 +164,8 @@ function baPressed(){
 }
 
 function buPressed(){
+    bubbLocX = windowWidth/2;
+    bubbLocY = windowHeight/2;
     bubblesPressed = true;
     balloonPressed = false;
     flamesPressed = false;
@@ -195,21 +200,15 @@ function chooseColor(){
 
 function airBreath(){
     
-   // noFill();
     background(158, 212, 255);
-    stroke(255, 102, 0);
-    stroke(0, 0, 0);
+    stroke(0);
     strokeWeight(1);
-    push();
-    noFill();
-    translate(572, 374);
-    bezier(50, 15, 5, 10, 90, 90, 15, 80);
-    //bezier(622, 389, 577, 384, 662, 662, 588,454);
-    pop();
-    line(windowWidth/2, windowHeight/2+10, windowWidth/2, windowHeight/2 + 20);
     fill(red);
     push();
     translate(0, translateY);
+    noFill();
+    bezier(622, 389, 577, 384, 662, 464, 588,454);
+    fill(red);
     noStroke();
     triangle(windowWidth/2, windowHeight/2+10, (windowWidth/2) - 10, (windowHeight/2) + 40, (windowWidth/2) + 10, (windowHeight/2) + 40);
     ellipse(ballLocX, ballLocY, 60, 65);
@@ -218,40 +217,35 @@ function airBreath(){
    
 }
 
-function earthBreath(){
+function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.php
+    background(green); 
     push();
-    background(black);
-    fill(yellow);
-    ellipse(windowWidth/2, windowHeight/2, 60, 60); 
-    pop();
-    if(second() > 0 && second() < 15){ //refine these a little bit using modulo
-        ellipse(windowWidth/2 + 10, windowHeight/2, 60, 60);
-    }
-    if(second() >= 15 && second() < 30){
-        
-        ellipse(windowWidth/2 - 10, windowHeight/2, 60, 60);
-    }
-    if(second() >= 30 && second() < 45){
-        ellipse(windowWidth, windowHeight/2 - 10, 60, 60);
-    }
-    if(second() >=45 && second() < 60){
-        
-        ellipse(windowWidth, windowHeight/2 + 10, 60, 60);
-        
-    }
-    /*
-    push();
+    fill(red, 150);
     noStroke();
-    fill(green);
+    translate(windowWidth/2, windowHeight/2)
+  for (var i = 0; i < 10; i++) {
+    ellipse(0, 30, 20, 80);
+      //insert something about time here so each petal shows after a second? 
+    rotate(PI/4);
+      //as each second passes, another petal is added?
+      //have petals of 7? or just keep petal of 4 for four seconds
+      //remove petals from a flower of 8?
+  }
     pop();
-    rect(windowWidth - 100, 0, 100, windowHeight);
-    */
+    fill(yellow);
+    noStroke();
+    ellipse(windowWidth/2, windowHeight/2, 20, 20);
 }
-
+    
 function fireBreath(){
     push();
-    rotate(30);
+    background(255);
+    translate(windowWidth/2, windowHeight/2);
+    fill(orange);
+    for(var i = 0; i <10; i++){
     ellipse(windowWidth/2, 30, 20, 20); //make ring of circles 
+    rotate(PI/8); //how to make radius of rotation smaller? 
+    }
     pop();
 
 }
