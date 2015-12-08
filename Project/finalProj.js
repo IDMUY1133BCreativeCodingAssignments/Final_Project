@@ -39,8 +39,8 @@ var button;
 
 var ballLocX;
 var ballLocY;
-var bubbLocX;
-var bubbLocY; 
+var bubbLocX = windowWidth/2;
+var bubbLocY = windowHeight/2; 
 var bubbLocationsX = [];
 var bubbLocationsY = [];
 
@@ -48,8 +48,8 @@ var theSec;
 var fourSecond;
 var sevenSecond;
 var eightSecond;
+var milliseconds; 
 
-var x; //which function to carry out
 //have array of triangle coordinates 
 var translateY = 10;
 
@@ -109,46 +109,7 @@ function draw(){
     if(bubblesPressed){
         waterBreath();
     }
-    /*
-    theSec = second();
-    console.log("beginning" + theSec); 
-    if(run == 1){
-        fourSecond = theSec + 4;
-        run = 2;
-        background(0);
-    }
-    if(theSec == fourSecond && run == 2){
-        sevenSecond = theSec + 7;
-        //while(theSec
-        background(255);
-    }
-    console.log("four" + fourSecond);
-   // background(255);
-   */
-
     displaySeconds(); 
-    
-    /*
-    if(run == 1){
-        fourSecond = millis() + 4000;
-        while(millis() < fourSec){
-            fourSec(x);
-        }
-        run = 2;
-    }
-    else if(run == 2){
-        sevenSecond = millis() + 7000;
-        while(millis() < sevenSec){
-            sevenSec(x);
-        }
-        run = 3;
-    }
-    else if(run == 3){
-        eightSecond = millis() + 8000;
-        while(millis() < eightSec){
-            eightSec(x);
-        }
-        */
 }
 
 /*
@@ -157,6 +118,7 @@ it also restarts all the values
 */
 function baPressed(){
     translateY = 10;
+    run = 1;
     balloonPressed = true;
     bubblesPressed = false;
     flamesPressed = false;
@@ -164,6 +126,7 @@ function baPressed(){
 }
 
 function buPressed(){
+    run = 1;
     bubbLocX = windowWidth/2;
     bubbLocY = windowHeight/2;
     bubblesPressed = true;
@@ -173,6 +136,7 @@ function buPressed(){
 }
 
 function fPressed(){
+    run = 1;
     flamesPressed = true;
     balloonPressed = false;
     flowerPressed = false;
@@ -180,17 +144,11 @@ function fPressed(){
 }
 
 function floPressed(){
+    run = 1;
     flowerPressed = true;
     flamesPressed = false;
     balloonPressed = false;
     bubblesPressed = false;
-}
-
-function palette(){ 
-    for(var i = 0; i < 8; i ++){
-     ellipse(25, 25, 10, 10);  //use this to draw the palette colors?  
-        
-    }
 }
 
 
@@ -199,30 +157,77 @@ function chooseColor(){
 }
 
 function airBreath(){
-    
+    if(run == 1){
+    milliseconds = millis();  
+    fourSecond = milliseconds + 4000;
+    sevenSecond = fourSecond + 7000;
+    eightSecond = sevenSecond + 8000;
+    run = 2;
+    }
     background(158, 212, 255);
     stroke(0);
     strokeWeight(1);
     fill(red);
     push();
+    if(millis()< fourSecond){
+        translateY = translateY - .5;
+    }
+    else if(millis() < sevenSecond){
+        translateY = 0;
+    }
+   else if(millis() < eightSecond){
+        translateY = translateY + .5;
+       //find way to make it loop
+    }
+    
     translate(0, translateY);
     noFill();
-    bezier(622, 389, 577, 384, 662, 464, 588,454);
+    bezier(622, 379, 577, 384, 662, 464, 588,454);
     fill(red);
     noStroke();
     triangle(windowWidth/2, windowHeight/2+10, (windowWidth/2) - 10, (windowHeight/2) + 40, (windowWidth/2) + 10, (windowHeight/2) + 40);
     ellipse(ballLocX, ballLocY, 60, 65);
-    translateY--;
     pop();
-   
 }
 
+
 function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.php
-    background(green); 
+    if(run == 1){
+            background(green); 
+
+    milliseconds = millis();  
+    fourSecond = milliseconds + 4000;
+    sevenSecond = fourSecond + 7000;
+    eightSecond = sevenSecond + 8000;
+    run = 2;
+    }
+    
     push();
     fill(red, 150);
     noStroke();
+    //adjust rotations 
     translate(windowWidth/2, windowHeight/2)
+      if(millis()<fourSecond){
+        rotate(PI/3);
+        ellipse(0, 30, 20, 80);
+        rotate(PI/3);
+        ellipse(0, 30, 20, 80);
+    }
+    else if(millis() < sevenSecond){
+        rotate(PI);
+        ellipse(0, 30, 20, 80);
+        rotate(4*PI/3);
+        ellipse(0, 30, 20, 80);
+    }
+   else if(millis() < eightSecond){
+       rotate(5*PI/3);
+        ellipse(0, 30, 20, 80);
+       rotate(2*PI);
+       ellipse(0, 30, 20,80);
+    
+    }
+    
+    /*
   for (var i = 0; i < 10; i++) {
     ellipse(0, 30, 20, 80);
       //insert something about time here so each petal shows after a second? 
@@ -231,6 +236,7 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
       //have petals of 7? or just keep petal of 4 for four seconds
       //remove petals from a flower of 8?
   }
+  */
     pop();
     fill(yellow);
     noStroke();
@@ -252,9 +258,18 @@ function fireBreath(){
 
 function waterBreath(){ //add bubble details later 
     background(black);
+    fill(blue);
+    noStroke();
+    if(run == 1){
+    milliseconds = millis();  
+    fourSecond = milliseconds + 4000;
+    sevenSecond = fourSecond + 7000;
+    eightSecond = sevenSecond + 8000;
+    run = 2;
+    }
+   
+    
     /*
-    for(var i = 0; i < 6; i++){
-        push();
         fill(blue);
         noStroke();
         bubbLocX = random(0, windowWidth);
@@ -265,20 +280,26 @@ function waterBreath(){ //add bubble details later
         pop();
         bubbLocationX[i]++;
         bubbLocationsY[i]++;
+        */
+    
+     
+    if(millis()<fourSecond){
+        bubbLocY = bubbLocY + .5;
     }
-    */
+    else if(millis() < sevenSecond){
+        bubbLocY = bubbLocY;
+    }
+   else if(millis() < eightSecond){
+        bubbLocY = bubbLocY - .5;
+       //find way to make it loop
+    }
+    
     fill(blue);
     noStroke();
     ellipse(bubbLocX, bubbLocY, 50, 50);
     var offset = random(-1, 1);
-    bubbLocY++;
+    //bubbLocY++;
     bubbLocX = offset + bubbLocX;
-    
-}
-
-function timePass(){
-    //used to count seconds 
-    
 }
 
 function displaySeconds(){
@@ -289,19 +310,4 @@ function displaySeconds(){
     textSize(30);
     text(second(), 5, 35);
     pop();
-}
-
-function fourSec(){
-    
-    
-}
-
-function sevenSec(){
-    
-    
-}
-
-function eightSec(){
-    
-    
 }
