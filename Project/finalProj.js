@@ -20,8 +20,13 @@
 
 //https://processing.org/examples/tree.html <- use for earth?
 
+//toggle timer!!!
 
-var red; //global variable for maximum scope 
+//consider  making multiple of all the objects on breathing part 
+
+//look at tickle p5.js example for mouseOver help 
+
+var red; //global variable for maximum scope of colors 
 var orange;
 var yellow;
 var green;
@@ -29,6 +34,7 @@ var blue;
 var violet;
 var white;
 var black;
+var lightblue;
 var whichColor; 
 
 var balloon; // all the buttons
@@ -44,23 +50,41 @@ var bubbLocY = windowHeight/2;
 var bubbLocationsX = [];
 var bubbLocationsY = [];
 
+//used for calculating duration of breathine exercises 
 var theSec;
 var fourSecond;
 var sevenSecond;
 var eightSecond;
 var milliseconds; 
 
+//all the sound variables
+var fireSound;
+var airSound;
+var waterSound;
+var earthSound;
+var bubbleSound;
+
 //have array of triangle coordinates 
 var translateY = 10;
 
+//used for counting seconds 
 var run = 1;
-//var second = second(); //not working yet 
+
 
 var balloonPressed = false;
 var flowerPressed = false;
 var bubblesPressed = false;
 var flamesPressed = false;
 
+function preload(){
+    fireSound = loadSound("sounds/fireplace.mp3");
+    airSound = loadSound("sounds/wind-chimes.mp3");
+    earthSound = loadSound("sounds/rustle.mp3");
+    waterSound = loadSound("sounds/rain.mp3");   
+    bubbleSound = loadSound("sounds/bubble.mp3");
+    background(127);
+}
+    
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
@@ -74,6 +98,7 @@ function setup(){
     violet = color(134, 67, 252);
     white = color(255, 255, 255);
     black = color(0, 0, 0);
+    lightblue = color(172, 224, 242);
     
     ballLocX = windowWidth/2;
     ballLocY = windowHeight/2;
@@ -117,6 +142,7 @@ the purpose of the next four functions is to prevent multiple breathing exercise
 it also restarts all the values
 */
 function baPressed(){
+    airSound.play();
     translateY = 10;
     run = 1;
     balloonPressed = true;
@@ -127,6 +153,8 @@ function baPressed(){
 
 function buPressed(){
     run = 1;
+    bubbleSound.play();
+    bubbleSound.loop(); //file is only 4 seconds
     bubbLocX = windowWidth/2;
     bubbLocY = windowHeight/2;
     bubblesPressed = true;
@@ -136,6 +164,7 @@ function buPressed(){
 }
 
 function fPressed(){
+    fireSound.play();
     run = 1;
     flamesPressed = true;
     balloonPressed = false;
@@ -144,6 +173,7 @@ function fPressed(){
 }
 
 function floPressed(){
+    earthSound.play();
     run = 1;
     flowerPressed = true;
     flamesPressed = false;
@@ -173,7 +203,7 @@ function airBreath(){
         translateY = translateY - .5;
     }
     else if(millis() < sevenSecond){
-        translateY = 0;
+        translateY = translateY - random(-.5, .5);
     }
    else if(millis() < eightSecond){
         translateY = translateY + .5;
@@ -193,7 +223,7 @@ function airBreath(){
 
 function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.php
     if(run == 1){
-            background(green); 
+    background(green); 
 
     milliseconds = millis();  
     fourSecond = milliseconds + 4000;
@@ -205,9 +235,8 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
     push();
     fill(red, 150);
     noStroke();
-    //adjust rotations 
     translate(windowWidth/2, windowHeight/2)
-      if(millis()<fourSecond){
+    if(millis()<fourSecond){
         rotate(PI/3);
         ellipse(0, 30, 20, 80);
         rotate(PI/3);
@@ -216,27 +245,15 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
     else if(millis() < sevenSecond){
         rotate(PI);
         ellipse(0, 30, 20, 80);
-        rotate(4*PI/3);
+        rotate(PI);
         ellipse(0, 30, 20, 80);
     }
    else if(millis() < eightSecond){
        rotate(5*PI/3);
         ellipse(0, 30, 20, 80);
-       rotate(2*PI);
+       rotate(5*PI/3);
        ellipse(0, 30, 20,80);
-    
     }
-    
-    /*
-  for (var i = 0; i < 10; i++) {
-    ellipse(0, 30, 20, 80);
-      //insert something about time here so each petal shows after a second? 
-    rotate(PI/4);
-      //as each second passes, another petal is added?
-      //have petals of 7? or just keep petal of 4 for four seconds
-      //remove petals from a flower of 8?
-  }
-  */
     pop();
     fill(yellow);
     noStroke();
@@ -244,8 +261,19 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
 }
     
 function fireBreath(){
+    //melting candle
+    
+    //put triangle behind ellipse to make the flame 
     push();
-    background(255);
+    noStroke();
+    background(125);
+    fill(green);
+    rect(windowWidth/2, windowHeight/2 - 30, 100, 200); //fix these a little 
+    fill(red);
+    rect(windowWidth/2, windowHeight/2 - 10, 100, 200);
+    fill(blue);
+    rect(windowWidth/2, windowHeight/2 + 10, 100, 200);
+    
     translate(windowWidth/2, windowHeight/2);
     fill(orange);
     for(var i = 0; i <10; i++){
@@ -257,9 +285,7 @@ function fireBreath(){
 }
 
 function waterBreath(){ //add bubble details later 
-    background(black);
-    fill(blue);
-    noStroke();
+    background(blue);
     if(run == 1){
     milliseconds = millis();  
     fourSecond = milliseconds + 4000;
@@ -294,7 +320,7 @@ function waterBreath(){ //add bubble details later
        //find way to make it loop
     }
     
-    fill(blue);
+    fill(lightblue);
     noStroke();
     ellipse(bubbLocX, bubbLocY, 50, 50);
     var offset = random(-1, 1);
@@ -310,4 +336,9 @@ function displaySeconds(){
     textSize(30);
     text(second(), 5, 35);
     pop();
+}
+
+function stopOtherSong(){ //used to stop other song when new song is played 
+    
+    
 }
