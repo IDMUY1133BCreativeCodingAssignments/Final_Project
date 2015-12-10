@@ -11,7 +11,7 @@ function Hero(_maxSpeed, lev_size){
     
     this.hero.lives = 3;  //collision for sprites doesn't really match this. When sprites touch, this number keeps decreasing very fast
                             //is there a way to just decrease by 1 on every touch?
-     
+         
     //the bonuses and extras
     this.bg = new Group();
   
@@ -43,7 +43,7 @@ Hero.prototype.collisionCheck = function(otherSprite){
     if(this.hero.overlap(this.bg)){
         //background(0);
         this.hero.lives --;  //in case of collision, lives decrease
-       }
+       }  //if
 
 }
 
@@ -70,4 +70,11 @@ Hero.prototype.display = function(){
     drawSprites(this.bg);
     drawSprite(this.hero);
 
+}
+
+Hero.prototype.checkLives = function(){  //check if hero is out of lives
+    if(this.hero.lives < 1){
+        return false;
+    }else{
+        return true;}
 }
