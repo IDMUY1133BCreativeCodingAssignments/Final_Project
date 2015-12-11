@@ -4,49 +4,46 @@ Thomas Sanchez Lengeling.
 
  KinectPV2, Kinect for Windows v2 library for processing
 
- Skeleton depth tracking example
+ Skeleton color map example.
+ Skeleton (x,y) positions are mapped to match the color Frame
  */
 
-import java.util.ArrayList;
 import KinectPV2.KJoint;
 import KinectPV2.*;
 
 KinectPV2 kinect;
-float r;
+
 
 void setup() {
-  size(512, 424, P3D);
+  size(1920, 1080, P3D);
 
   kinect = new KinectPV2(this);
 
-  //Enables depth and Body tracking (mask image)
-  kinect.enableDepthMaskImg(true);
-  kinect.enableSkeletonDepthMap(true);
+  kinect.enableSkeletonColorMap(true);
+  kinect.enableColorImg(true);
 
   kinect.init();
 }
 
 void draw() {
   background(0);
-  
 
-  image(kinect.getDepthMaskImage(), 0, 0);
+  image(kinect.getColorImage(), 0, 0, width, height);
 
-  //get the skeletons as an Arraylist of KSkeletons
-  ArrayList<KSkeleton> skeletonArray =  kinect.getSkeletonDepthMap();
+  ArrayList<KSkeleton> skeletonArray =  kinect.getSkeletonColorMap();
 
-  //individual joints
+  //individual JOINTS
   for (int i = 0; i < skeletonArray.size(); i++) {
     KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
-    //if the skeleton is being tracked compute the skleton joints
     if (skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
 
       color col  = skeleton.getIndexColor();
       fill(col);
       stroke(col);
-
       drawBody(joints);
+
+      //draw different color for each hand state
       drawHandState(joints[KinectPV2.JointType_HandRight]);
       drawHandState(joints[KinectPV2.JointType_HandLeft]);
     }
@@ -54,10 +51,9 @@ void draw() {
 
   fill(255, 0, 0);
   text(frameRate, 50, 50);
-  rect(100,100,100,100);
 }
 
-//draw the body
+//DRAW BODY
 void drawBody(KJoint[] joints) {
   drawBone(joints, KinectPV2.JointType_Head, KinectPV2.JointType_Neck);
   drawBone(joints, KinectPV2.JointType_Neck, KinectPV2.JointType_SpineShoulder);
@@ -92,7 +88,6 @@ void drawBody(KJoint[] joints) {
   drawBone(joints, KinectPV2.JointType_KneeLeft, KinectPV2.JointType_AnkleLeft);
   drawBone(joints, KinectPV2.JointType_AnkleLeft, KinectPV2.JointType_FootLeft);
 
-  //Single joints
   drawJoint(joints, KinectPV2.JointType_HandTipLeft);
   drawJoint(joints, KinectPV2.JointType_HandTipRight);
   drawJoint(joints, KinectPV2.JointType_FootLeft);
@@ -104,39 +99,36 @@ void drawBody(KJoint[] joints) {
   drawJoint(joints, KinectPV2.JointType_Head);
 }
 
-//draw a single joint
+//draw joint
 void drawJoint(KJoint[] joints, int jointType) {
   pushMatrix();
   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
-  
   ellipse(0, 0, 25, 25);
   popMatrix();
 }
 
-//draw a bone from two joints
+//draw bone
 void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   pushMatrix();
   translate(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ());
   ellipse(0, 0, 25, 25);
-  stroke(0);
-  rectMode(CENTER);
-  r = r+.01;
-  rotate(r);
-  rect(0,0,50,50);
-  noStroke();
-  
-  println(joints[jointType1].getX());
   popMatrix();
   line(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ(), joints[jointType2].getX(), joints[jointType2].getY(), joints[jointType2].getZ());
 }
 
-//draw a ellipse depending on the hand state
+//draw hand state
 void drawHandState(KJoint joint) {
   noStroke();
   handState(joint.getState());
   pushMatrix();
   translate(joint.getX(), joint.getY(), joint.getZ());
   ellipse(0, 0, 70, 70);
+  rectMode(CENTER);
+ 
+  fill(joint.getY()/3,30,joint.getX()/3);
+  rect(0,0,100,100);
+  println(joint.getY());
+  
   popMatrix();
 }
 
@@ -147,8 +139,6 @@ Different hand state
  KinectPV2.HandState_Lasso
  KinectPV2.HandState_NotTracked
  */
-
-//Depending on the hand state change the color
 void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Open:
@@ -161,7 +151,7 @@ void handState(int handState) {
     fill(0, 0, 255);
     break;
   case KinectPV2.HandState_NotTracked:
-    fill(100, 100, 100);
+    fill(255, 255, 255);
     break;
   }
 }
