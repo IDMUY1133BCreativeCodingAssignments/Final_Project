@@ -129,6 +129,7 @@ void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   
   println(joints[jointType1].getX());
   popMatrix();
+  fill(100,100,100);
   line(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ(), joints[jointType2].getX(), joints[jointType2].getY(), joints[jointType2].getZ());
 }
 
@@ -139,14 +140,14 @@ void drawHandState(KJoint joint) {
   pushMatrix();
   
   translate(joint.getX(), joint.getY(), joint.getZ());
-  ellipse(0, 0, 70, 70);
+ellipse(0, 0, 70, 70);
   popMatrix();
    pushMatrix();
 
   
  
-   float x = joint.getX()/2;
-float y = joint.getY()/2;
+   float x = joint.getX()/4;
+float y = joint.getY()/4;
 float x1 = 500;
 float y1 = 500;
 fill(x,20,100);
