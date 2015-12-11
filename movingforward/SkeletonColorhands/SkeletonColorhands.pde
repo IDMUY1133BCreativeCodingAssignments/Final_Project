@@ -128,9 +128,28 @@ void drawHandState(KJoint joint) {
   fill(joint.getY()/3,30,joint.getX()/3);
   rect(0,0,100,100);
   println(joint.getY());
-  
+  popMatrix();
+  pushMatrix();
+   float x = joint.getX()/2;
+float y = joint.getY()/2;
+float x1 = 500;
+float y1 = 500;
+fill(x,20,100);
+  rect(0, 0, 4200, 0+y);
+ fill(40,x,100);
+  rect(0,0,0+x,4200);
+ fill(100,20,x);
+ rect (0,1050,4200,100-y);
+ fill(200,x,x);
+  rect (2000,0,0-x,2000);
+  //fill(x,50,x);
+ // ellipse(width/2, height/2, x, x);
   popMatrix();
 }
+  
+  
+  
+
 
 /*
 Different hand state

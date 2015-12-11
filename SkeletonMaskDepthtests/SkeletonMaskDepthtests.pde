@@ -27,6 +27,7 @@ void setup() {
 }
 
 void draw() {
+  
   background(0);
   
 
@@ -54,7 +55,7 @@ void draw() {
 
   fill(255, 0, 0);
   text(frameRate, 50, 50);
-  rect(100,100,100,100);
+ 
 }
 
 //draw the body
@@ -122,7 +123,8 @@ void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   rectMode(CENTER);
   r = r+.01;
   rotate(r);
-  rect(0,0,50,50);
+  fill(0,0,100);
+  ellipse(0,0,100,100);
   noStroke();
   
   println(joints[jointType1].getX());
@@ -135,9 +137,31 @@ void drawHandState(KJoint joint) {
   noStroke();
   handState(joint.getState());
   pushMatrix();
+  
   translate(joint.getX(), joint.getY(), joint.getZ());
   ellipse(0, 0, 70, 70);
   popMatrix();
+   pushMatrix();
+
+  
+   rotate(r);
+   float x = joint.getX()/2;
+float y = joint.getY()/2;
+float x1 = 500;
+float y1 = 500;
+fill(x,20,100);
+  rect(0, 0, width*2, 0+y);
+  fill(40,x,100);
+   rect(0,0,0+x,height*2);
+   fill(100,20,x);
+   rect (0,height,width*2,0-y);
+   fill(200,x,x);
+   rect (width,0,0-x,2000);
+  //fill(x,50,x);
+  
+ // ellipse(width/2, height/2, x, x);
+  popMatrix();
+  
 }
 
 /*
