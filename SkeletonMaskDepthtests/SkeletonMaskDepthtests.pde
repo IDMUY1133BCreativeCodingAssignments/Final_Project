@@ -144,7 +144,7 @@ void drawHandState(KJoint joint) {
    pushMatrix();
 
   
-   rotate(r);
+ 
    float x = joint.getX()/2;
 float y = joint.getY()/2;
 float x1 = 500;
