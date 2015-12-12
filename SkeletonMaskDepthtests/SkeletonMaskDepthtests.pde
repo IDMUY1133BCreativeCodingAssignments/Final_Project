@@ -21,13 +21,14 @@ void setup() {
 
   //Enables depth and Body tracking (mask image)
   kinect.enableDepthMaskImg(true);
-  kinect.enableSkeletonDepthMap(true);
+  //kinect.enableSkeletonDepthMap(true);
 
   kinect.init();
 }
 
 void draw() {
-  
+  float r = 0;
+  r = r+.1;
   background(0);
   
 
@@ -43,9 +44,9 @@ void draw() {
     if (skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
 
-      color col  = skeleton.getIndexColor();
-      fill(col);
-      stroke(col);
+     //color col  = skeleton.getIndexColor();
+      //fill(random(255),100,100);
+      //stroke(random(255));
 
       drawBody(joints);
       drawHandState(joints[KinectPV2.JointType_HandRight]);
@@ -101,7 +102,6 @@ void drawBody(KJoint[] joints) {
 
   drawJoint(joints, KinectPV2.JointType_ThumbLeft);
   drawJoint(joints, KinectPV2.JointType_ThumbRight);
-
   drawJoint(joints, KinectPV2.JointType_Head);
 }
 
@@ -118,13 +118,15 @@ void drawJoint(KJoint[] joints, int jointType) {
 void drawBone(KJoint[] joints, int jointType1, int jointType2) {
   pushMatrix();
   translate(joints[jointType1].getX(), joints[jointType1].getY(), joints[jointType1].getZ());
-  ellipse(0, 0, 25, 25);
+  //llipse(0, 0, 25, 25);
   stroke(0);
   rectMode(CENTER);
-  r = r+.01;
+  r = r+.001;
   rotate(r);
   fill(0,0,100);
-  ellipse(0,0,100,100);
+ // ellipse(0,0,100,100);
+  noStroke();
+  //ellipse(0,0,joints[jointType1].getY()/2,joints[jointType1].getX()/2);
   noStroke();
   
   println(joints[jointType1].getX());
@@ -142,6 +144,7 @@ void drawHandState(KJoint joint) {
   translate(joint.getX(), joint.getY(), joint.getZ());
 ellipse(0, 0, 70, 70);
   popMatrix();
+  /*
    pushMatrix();
 
   
@@ -162,7 +165,7 @@ fill(x,20,100);
   
  // ellipse(width/2, height/2, x, x);
   popMatrix();
-  
+  */
 }
 
 /*
@@ -178,15 +181,33 @@ void handState(int handState) {
   switch(handState) {
   case KinectPV2.HandState_Open:
     fill(0, 255, 0);
+     rect(width/2,height/2,300,300);
+     fill(255,100,0);
+     ellipse(width/2,height/2,40,100);
+       ellipse(width/2,height/2,100,40);
     break;
   case KinectPV2.HandState_Closed:
     fill(255, 0, 0);
+    rectMode(CENTER);
+    pushMatrix();
+    translate(width/2, height/2);
+    rotate(r);
+    rect(0,0,300,100);
+   
+    popMatrix();
+   
     break;
   case KinectPV2.HandState_Lasso:
     fill(0, 0, 255);
+    
     break;
   case KinectPV2.HandState_NotTracked:
+  fill(0,200,200);
+     rect(width/2,height/2, 300,300);
     fill(100, 100, 100);
+     rect(width/2,height/2,200,200);
+    
+     
     break;
   }
 }
