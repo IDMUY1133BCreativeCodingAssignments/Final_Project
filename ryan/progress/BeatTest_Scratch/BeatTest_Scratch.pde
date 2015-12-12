@@ -6,6 +6,7 @@ Minim minim; // start Minim library
 AudioPlayer player; // player is an AudioPlayer
 FFT fft; // FFT stands for Fast Fourier Transform - audio to visual analysis
 
+
 // variables for graphics
 // vars for kickbox
 int topLx, topLy, topCx, topCy, topRx, topRy; // values for kickbox top row
@@ -18,6 +19,10 @@ float yrise = 0.0;
 int col;
 color[] colorarray;
 
+//vars for squarefield
+int driftX;
+float randomRotateAmt;
+
 // variables for monitoring
 int bassAmp, kickboxSensitivity;
 
@@ -27,6 +32,7 @@ void setup() {
   size(1280, 720, P3D);
   frameRate(60);
   background(0);
+
 
   // allow loading files in data directory
   minim = new Minim(this);
@@ -49,22 +55,28 @@ void setup() {
   colorarray[3] = color(255, 122, 93);
   colorarray[4] = color(252, 104, 255);
   colorarray[5] = color(255, 174, 62);
+
+  //setup for squarefield
+  driftX = 0;
+  randomRotateAmt = random(1, 24);
+  stroke(255);
 }
 
 // ****----//// DRAW \\\\----****
 
 void draw() {
 
-
   fft.forward(player.mix); // initiate FFT on player
   bassAmp = int(fft.getFreq(50)); // analyse amplitude of 50Hz
 
   // --function-- kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
   //kickbox(50, bassAmp, "warm", 20);
-  
+
   // --function-- squarebloom(basesize of square)
   //squarebloom(6);
 
+  // --function-- squarefield(rectangle width, rectangle height, colorOFF=0/colorON=1)
+  squarefield(20, 20, 0);
 }
 
 // ****----//// END DRAW \\\\----****
@@ -188,6 +200,34 @@ void squarebloom(int basesize) {
   rect(width/2+5+n, height+15+yrise, basesize+bassAmp/10, basesize+bassAmp/10);
   stroke(col);
   rect(width/2-5-n, 0-15-yrise, basesize+bassAmp/10, basesize+bassAmp/10);
+}
+
+// squarefield (scene 3)
+void squarefield(int rectWidth, int rectHeight, int colorON) {
+  background(0);
+  pushMatrix();
+  driftX = driftX - 5;
+  if (driftX<-width*3) {
+    driftX = 0;
+  }
+  if (bassAmp>kickboxSensitivity) {
+    randomRotateAmt = random(1, 24);
+    if (colorON==1) {
+      stroke(random(125, 255), random(125, 255), random(125, 255));
+    }
+    if (colorON==0) {
+      stroke(255);
+    }
+  }
+  translate(driftX, 0);
+  for (int iX = 20; iX<width*12; iX=iX+40) {
+    for (int iY = 20; iY<height; iY=iY+40) {
+      noFill();
+      rotateY(randomRotateAmt);
+      rect(iX, iY, rectWidth, rectHeight);
+    }
+  }
+  popMatrix();
 }
 
 // ****----//// END GRAPHICS \\\\----****
