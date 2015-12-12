@@ -11,6 +11,9 @@ int topLx, topLy, topCx, topCy, topRx, topRy; // values for kickbox top row
 int midLx, midLy, midCx, midCy, midRx, midRy; // values for kickbox mid row
 int botLx, botLy, botCx, botCy, botRx, botRy; // values for kickbox bot row
 
+float xoffset = 0.0;
+float yrise = 0.0;
+
 // variables for monitoring
 int bassAmp, kickboxSensitivity;
 int beepAmp;
@@ -20,12 +23,13 @@ void setup() {
   // create window in 720p and with Z-axis
   size(1280, 720, P3D);
   frameRate(60);
+  background(0);
 
   // allow loading files in data directory
   minim = new Minim(this);
 
   // load the audio track in data directory
-  player = minim.loadFile("expand.mp3", 1024);
+  player = minim.loadFile("drowning.mp3", 1024);
 
   // FFT object with time domain buffer
   fft = new FFT(player.bufferSize(), player.sampleRate());
@@ -37,23 +41,31 @@ void setup() {
 // ****----//// DRAW \\\\----****
 
 void draw() {
-  background(0);
+  
 
   fft.forward(player.mix); // initiate FFT on player
   bassAmp = int(fft.getFreq(50)); // analyse amplitude of 50Hz
   beepAmp = int(fft.getFreq(1130))*10; // WIP:analyse beep
 
   // kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
-  kickbox(50, bassAmp, "cool", 20);
-  
-  //WIP SECTION, TESTING "BEEPS"
-  fill(255);
-  stroke(255);
+  //kickbox(50, bassAmp, "warm", 20);
+
+  xoffset = xoffset + .01;
+  yrise = yrise - 1;
+  if (yrise<-(height+15)) {
+    yrise=0;
+    noStroke();
+    fill(0,0,0,200);
+    rect(0,0,width,height);
+  }
+  float n = noise(xoffset) * bassAmp*2;
+  println(n);
   strokeWeight(1);
-  if(beepAmp>130){
-  ellipse(random(0,width),random(0,height/2),beepAmp,beepAmp);}
-  text(beepAmp, mouseX, mouseY);
-  
+  noFill();
+  stroke(226,255,92);
+  rect(width/2+5+n, height+15+yrise, 6+bassAmp/10, 6+bassAmp/10);
+  stroke(252,104,255);
+  rect(width/2-5-n, 0-15-yrise, 6+bassAmp/10, 6+bassAmp/10);
 }
 
 // ****----//// END DRAW \\\\----****
@@ -97,7 +109,9 @@ void keyPressed() {
 
 // kickbox (graphic on beat)
 void kickbox(int margin, int kickjerk, String colorMode, int thickness) {
-
+ 
+  background(0);
+  
   // top row
   topLx = margin+int(random(-kickjerk, kickjerk));
   topLy = margin+int(random(-kickjerk, kickjerk));
