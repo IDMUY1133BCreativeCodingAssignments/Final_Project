@@ -7,16 +7,19 @@ AudioPlayer player; // player is an AudioPlayer
 FFT fft; // FFT stands for Fast Fourier Transform - audio to visual analysis
 
 // variables for graphics
+// vars for kickbox
 int topLx, topLy, topCx, topCy, topRx, topRy; // values for kickbox top row
 int midLx, midLy, midCx, midCy, midRx, midRy; // values for kickbox mid row
 int botLx, botLy, botCx, botCy, botRx, botRy; // values for kickbox bot row
 
+//vars for squarebloom
 float xoffset = 0.0;
 float yrise = 0.0;
+int col;
+color[] colorarray;
 
 // variables for monitoring
 int bassAmp, kickboxSensitivity;
-int beepAmp;
 
 
 void setup() {
@@ -34,38 +37,34 @@ void setup() {
   // FFT object with time domain buffer
   fft = new FFT(player.bufferSize(), player.sampleRate());
 
+  // setup for kickbox
   kickboxSensitivity = 150;
   println("Kickbox Sensitivity is " + kickboxSensitivity);
+
+  // setup for squarebloom
+  colorarray = new color[6];
+  colorarray[0] = color(39, 255, 97);
+  colorarray[1] = color(70, 255, 251);
+  colorarray[2] = color(226, 255, 92);
+  colorarray[3] = color(255, 122, 93);
+  colorarray[4] = color(252, 104, 255);
+  colorarray[5] = color(255, 174, 62);
 }
 
 // ****----//// DRAW \\\\----****
 
 void draw() {
-  
+
 
   fft.forward(player.mix); // initiate FFT on player
   bassAmp = int(fft.getFreq(50)); // analyse amplitude of 50Hz
-  beepAmp = int(fft.getFreq(1130))*10; // WIP:analyse beep
 
-  // kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
+  // --function-- kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
   //kickbox(50, bassAmp, "warm", 20);
+  
+  // --function-- squarebloom(basesize of square)
+  //squarebloom(6);
 
-  xoffset = xoffset + .01;
-  yrise = yrise - 1;
-  if (yrise<-(height+15)) {
-    yrise=0;
-    noStroke();
-    fill(0,0,0,200);
-    rect(0,0,width,height);
-  }
-  float n = noise(xoffset) * bassAmp*2;
-  println(n);
-  strokeWeight(1);
-  noFill();
-  stroke(226,255,92);
-  rect(width/2+5+n, height+15+yrise, 6+bassAmp/10, 6+bassAmp/10);
-  stroke(252,104,255);
-  rect(width/2-5-n, 0-15-yrise, 6+bassAmp/10, 6+bassAmp/10);
 }
 
 // ****----//// END DRAW \\\\----****
@@ -109,9 +108,9 @@ void keyPressed() {
 
 // kickbox (graphic on beat)
 void kickbox(int margin, int kickjerk, String colorMode, int thickness) {
- 
+
   background(0);
-  
+
   // top row
   topLx = margin+int(random(-kickjerk, kickjerk));
   topLy = margin+int(random(-kickjerk, kickjerk));
@@ -168,6 +167,27 @@ void kickbox(int margin, int kickjerk, String colorMode, int thickness) {
   line(midLx, midLy, botLx, botLy);
   line(midCx, midCy, botCx, botCy);
   line(midRx, midRy, botRx, botRy);
+}
+
+// squarebloom (scene 2)
+void squarebloom(int basesize) {
+  xoffset = xoffset + .01;
+  yrise = yrise - 1;
+  if (yrise<-(height+15)) {
+    yrise=0;
+    noStroke();
+    fill(0, 0, 0, 200);
+    rect(0, 0, width, height);
+  }
+  float n = noise(xoffset) * bassAmp*2;
+  println(n);
+  strokeWeight(1);
+  col = color(colorarray[(int)random(0, 5)]);
+  noFill();
+  stroke(col);
+  rect(width/2+5+n, height+15+yrise, basesize+bassAmp/10, basesize+bassAmp/10);
+  stroke(col);
+  rect(width/2-5-n, 0-15-yrise, basesize+bassAmp/10, basesize+bassAmp/10);
 }
 
 // ****----//// END GRAPHICS \\\\----****
