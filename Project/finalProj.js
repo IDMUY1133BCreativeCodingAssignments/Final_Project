@@ -26,6 +26,8 @@
 
 //look at tickle p5.js example for mouseOver help 
 
+//user can pluck petals/do stuff with flower once it is done loading maybe? (or incorporate that into the building mode) 
+
 var red; //global variable for maximum scope of colors 
 var orange;
 var yellow;
@@ -36,6 +38,8 @@ var white;
 var black;
 var lightblue;
 var whichColor; 
+var mint; 
+var indigo;
 
 var balloon; // all the buttons
 var flower;
@@ -49,6 +53,12 @@ var bubbLocX = windowWidth/2;
 var bubbLocY = windowHeight/2; 
 var bubbLocationsX = [];
 var bubbLocationsY = [];
+var candLocX;
+var candLocY; 
+var cand2LocX;
+var cand2LocY;
+var cand3LocX;
+var cand3LocY; 
 
 //used for calculating duration of breathine exercises 
 var theSec;
@@ -88,7 +98,7 @@ function preload(){
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
-    
+    earthSound.setVolume(2); //will this make it louder?
     //the colors that you can choose from
     red = color(255, 144, 134);
     orange = color(235, 173, 86);
@@ -99,12 +109,17 @@ function setup(){
     white = color(255, 255, 255);
     black = color(0, 0, 0);
     lightblue = color(172, 224, 242);
+    mint = color(146, 225, 171);
+    indigo = color(126, 135, 252);
     
     ballLocX = windowWidth/2;
     ballLocY = windowHeight/2;
     bubbLocX = windowWidth/2;
     bubbLocY = windowHeight/2;
-    
+    candLocY = 30; 
+    cand2LocY = 30;
+    cand3LocY = 30;
+
     balloon = createButton('balloon');
     balloon.position(windowWidth/5, 0);
     balloon.mousePressed(baPressed);
@@ -200,7 +215,7 @@ function airBreath(){
     fill(red);
     push();
     if(millis()< fourSecond){
-        translateY = translateY - .5;
+        translateY = translateY - 1;
     }
     else if(millis() < sevenSecond){
         translateY = translateY - random(-.5, .5);
@@ -209,12 +224,18 @@ function airBreath(){
         translateY = translateY + .5;
        //find way to make it loop
     }
-    
+    else if(millis() > eightSecond){
+     milliseconds = millis();
+        fourSecond = milliseconds + 4000;
+        sevenSecond = fourSecond + 7000;
+        eightSecond = sevenSecond + 8000; 
+    }
     translate(0, translateY);
     noFill();
     bezier(622, 379, 577, 384, 662, 464, 588,454);
     fill(red);
     noStroke();
+    //replace windowWidth/2 and etc. with ballLocX ballLocY, etc.
     triangle(windowWidth/2, windowHeight/2+10, (windowWidth/2) - 10, (windowHeight/2) + 40, (windowWidth/2) + 10, (windowHeight/2) + 40);
     ellipse(ballLocX, ballLocY, 60, 65);
     pop();
@@ -223,7 +244,7 @@ function airBreath(){
 
 function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.php
     if(run == 1){
-    background(green); 
+    background(mint); 
 
     milliseconds = millis();  
     fourSecond = milliseconds + 4000;
@@ -254,6 +275,12 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
        rotate(5*PI/3);
        ellipse(0, 30, 20,80);
     }
+     else if(millis() > eightSecond){
+     milliseconds = millis();
+        fourSecond = milliseconds + 4000;
+        sevenSecond = fourSecond + 7000;
+        eightSecond = sevenSecond + 8000; 
+    }
     pop();
     fill(yellow);
     noStroke();
@@ -262,24 +289,42 @@ function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.
     
 function fireBreath(){
     //melting candle
-    
-    //put triangle behind ellipse to make the flame 
-    push();
+    background(180);
     noStroke();
-    background(125);
-    fill(green);
-    rect(windowWidth/2, windowHeight/2 - 30, 100, 200); //fix these a little 
-    fill(red);
-    rect(windowWidth/2, windowHeight/2 - 10, 100, 200);
-    fill(blue);
-    rect(windowWidth/2, windowHeight/2 + 10, 100, 200);
-    
-    translate(windowWidth/2, windowHeight/2);
-    fill(orange);
-    for(var i = 0; i <10; i++){
-    ellipse(windowWidth/2, 30, 20, 20); //make ring of circles 
-    rotate(PI/8); //how to make radius of rotation smaller? 
+    fill(yellow);
+    triangle(windowWidth/2 + 1, windowHeight/2-60, windowWidth/2 + 39, windowHeight/2 - 60, windowWidth/2 + 20, windowHeight/2-100);
+    ellipse(windowWidth/2 + 20, windowHeight/2 - 60, 35, 40);
+    //put triangle behind ellipse to make the flame 
+    if(run == 1){
+    milliseconds = millis();  
+    fourSecond = milliseconds + 4000;
+    sevenSecond = fourSecond + 7000;
+    eightSecond = sevenSecond + 8000;
+    run = 2;
     }
+    push();
+    if(millis()<fourSecond){
+        candLocY++;
+    }
+    else if(millis() < sevenSecond){
+        cand2LocY++;
+    }
+   else if(millis() < eightSecond){
+       cand3LocY++;
+    }
+     else if(millis() > eightSecond){
+     milliseconds = millis();
+        fourSecond = milliseconds + 4000;
+        sevenSecond = fourSecond + 7000;
+        eightSecond = sevenSecond + 8000; 
+    }
+    noStroke();
+    fill(green);
+    rect(windowWidth/2, windowHeight/2 - 30, 40, candLocY); //fix these a little 
+    fill(red);
+    rect(windowWidth/2, windowHeight/2, 40, cand2LocY);
+    fill(blue);
+    rect(windowWidth/2, windowHeight/2 + 30, 40, cand3LocY);
     pop();
 
 }
@@ -310,16 +355,20 @@ function waterBreath(){ //add bubble details later
     
      
     if(millis()<fourSecond){
-        bubbLocY = bubbLocY + .5;
+        bubbLocY = bubbLocY - 1 ;
     }
     else if(millis() < sevenSecond){
         bubbLocY = bubbLocY;
     }
    else if(millis() < eightSecond){
-        bubbLocY = bubbLocY - .5;
-       //find way to make it loop
+        bubbLocY = bubbLocY + .5;
     }
-    
+     else if(millis() > eightSecond){
+     milliseconds = millis();
+        fourSecond = milliseconds + 4000;
+        sevenSecond = fourSecond + 7000;
+        eightSecond = sevenSecond + 8000; 
+    }
     fill(lightblue);
     noStroke();
     ellipse(bubbLocX, bubbLocY, 50, 50);
