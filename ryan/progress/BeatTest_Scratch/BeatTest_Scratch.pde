@@ -5,7 +5,7 @@ import ddf.minim.analysis.*;
 Minim minim; // start Minim library
 AudioPlayer player; // player is an AudioPlayer
 FFT fft; // FFT stands for Fast Fourier Transform - audio to visual analysis
-
+int selector, weightage;
 
 // variables for graphics
 // vars for kickbox
@@ -23,8 +23,13 @@ color[] colorarray;
 int driftX;
 float randomRotateAmt;
 
+//vars for circles
+int circlepop;
+
 // variables for monitoring
 int bassAmp, kickboxSensitivity;
+int snareAmp, snareSensitivity;
+float noiseAmp;
 
 
 void setup() {
@@ -32,20 +37,24 @@ void setup() {
   size(1280, 720, P3D);
   frameRate(60);
   background(0);
-
+  noCursor();
+  //selector = floor(random(1, 2.99));
+  selector = 2;
+  weightage = 1;
 
   // allow loading files in data directory
   minim = new Minim(this);
 
   // load the audio track in data directory
-  player = minim.loadFile("drowning.mp3", 1024);
+  player = minim.loadFile("spitfire.mp3", 1024);
 
   // FFT object with time domain buffer
   fft = new FFT(player.bufferSize(), player.sampleRate());
 
   // setup for kickbox
-  kickboxSensitivity = 150;
+  kickboxSensitivity = 130;
   println("Kickbox Sensitivity is " + kickboxSensitivity);
+  snareSensitivity = 20;
 
   // setup for squarebloom
   colorarray = new color[6];
@@ -60,6 +69,9 @@ void setup() {
   driftX = 0;
   randomRotateAmt = random(1, 24);
   stroke(255);
+
+  //setup circles
+  circlepop = 0;
 }
 
 // ****----//// DRAW \\\\----****
@@ -68,6 +80,8 @@ void draw() {
 
   fft.forward(player.mix); // initiate FFT on player
   bassAmp = int(fft.getFreq(50)); // analyse amplitude of 50Hz
+  snareAmp = int(fft.getFreq(1760)); // analyse amplitude of 500Hz
+  noiseAmp = map(fft.getFreq(19000), 0, 1, 0, 500);
 
   // --function-- kickbox(margin, randomness amount, color scheme "warm" or "cool", thickness)
   //kickbox(50, bassAmp, "warm", 20);
@@ -76,7 +90,47 @@ void draw() {
   //squarebloom(6);
 
   // --function-- squarefield(rectangle width, rectangle height, colorOFF=0/colorON=1)
-  squarefield(20, 20, 0);
+  //squarefield(20,20,1);
+
+  if (bassAmp>kickboxSensitivity) {
+    selector = floor(random(1, 4.99));
+    weightage = int(random(1, 50));
+  } else {
+    if (snareAmp>snareSensitivity) {
+      weightage = int(random(1, 65));
+    }
+  }
+  if (selector==1) {
+    strokeWeight(weightage);
+    squarefield(20, 20, 1);
+  }
+  if (selector==2) {
+    if (bassAmp>kickboxSensitivity/3) {
+      strokeWeight(weightage);
+      squarefield(20, 20, 0);
+    } else {
+      circlepop();
+    }
+  }
+  if (selector==3) {
+    kickbox(50, bassAmp, "warm", 20);
+    if (bassAmp>kickboxSensitivity) {
+      selector = floor(random(1, 2.99));
+    }
+  }
+  if (selector==4) {
+    kickbox(50, bassAmp, "cool", 10);
+    if (bassAmp>kickboxSensitivity) {
+      selector = floor(random(1, 2.99));
+    }
+  }
+
+  fill(255);
+  text(kickboxSensitivity, width-40, 30);
+  text(bassAmp, width-80, 30);
+  text(snareSensitivity, width-120, 30);
+  text(snareAmp, width-160, 30);
+  text(noiseAmp, mouseX, mouseY);
 }
 
 // ****----//// END DRAW \\\\----****
@@ -108,6 +162,18 @@ void keyPressed() {
     if (keyCode == DOWN) {
       kickboxSensitivity = kickboxSensitivity - 10;
       println("Sensitivity is " + kickboxSensitivity);
+    }
+  }
+  if (key == CODED) {
+    if (keyCode == RIGHT) {
+      snareSensitivity = snareSensitivity + 5;
+      println("Snare Sensitivity is " + snareSensitivity);
+    }
+  }
+  if (key == CODED) {
+    if (keyCode == LEFT) {
+      snareSensitivity = snareSensitivity - 5;
+      println("Snare Sensitivity is " + snareSensitivity);
     }
   }
 }
@@ -226,6 +292,26 @@ void squarefield(int rectWidth, int rectHeight, int colorON) {
       rotateY(randomRotateAmt);
       rect(iX, iY, rectWidth, rectHeight);
     }
+  }
+  popMatrix();
+}
+
+void circlepop() {
+  pushMatrix();
+  background(0);
+  translate(width/2, height/2);
+  fill(255);
+  noStroke();
+  ellipse(0, 0, noiseAmp, noiseAmp);
+  fill(0);
+  ellipse(0, 0, noiseAmp/1.1, noiseAmp/1.1);
+  if (noiseAmp>500) {
+    stroke(255);
+    strokeWeight(1);
+    noFill();
+    triangle(random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800));
+    triangle(random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800));
+    triangle(random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800), random(-800, 800));
   }
   popMatrix();
 }
