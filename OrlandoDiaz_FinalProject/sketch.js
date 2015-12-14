@@ -27,6 +27,7 @@ var acceleration; //what keeps him moving side to side consistently
 var theme2; //other unused theme
 var asgore1; //current boss theme
 var asgore2; //2nd phase current boss theme
+var finalboss; //Final phase current boss theme
 var battle = false; //battle start detector boolean
 var backdrop = 255; //background variable
 var fightx; //distance from FIGHT needed to click to activate
@@ -35,8 +36,9 @@ var itemx; //distance from ITEM needed to click to activate
 var fightcolor = 255; //text color
 var magiccolor = 255; //text color
 var itemcolor = 255; //text color
-var fightdetector1 = false;
-var fightdetector2 = false;
+var fightdetector1 = false; //detects 9hp
+var fightdetector2 = false; //detects 8hp
+var count = 1;
 
 function preload(){
   hearticon = loadImage('data/heart.png');
@@ -48,7 +50,9 @@ function preload(){
   theme2 = loadSound('data/toby fox - UNDERTALE Soundtrack - 80 Finale.mp3');
   asgore1 = loadSound('data/toby fox - UNDERTALE Soundtrack - 76 Bergentrückung.mp3');
   asgore2 = loadSound('data/toby fox - UNDERTALE Soundtrack - 77 ASGORE.mp3');
+  finalboss = loadSound('data/toby fox - UNDERTALE Soundtrack - 87 Hopes and Dreams.mp3');
   sfearpissed = loadAnimation('data/Sfear0001.png', 'data/Sfear0010.png');
+  sfearinfuriated = loadAnimation('data/Sfear0010.png', 'data/Sfear0014.png');
 }
 
 function setup(){ //setup is apparently where music comes from
@@ -64,27 +68,28 @@ function setup(){ //setup is apparently where music comes from
 
 function draw(){
   background(battlebackground);
-  fightoption();
+  //fightoption();
   allthestuffsodrawcanlookniceandclean();
-  if(fightdetector1 = true){
-  	if(mouseIsPressed){
-  		bhealth = "8/10"; //I have a problem here, when I click the health just skips to 8/10 instead of going to 9/10 first.
-  		bosshploss = 50; // (read above first) I assume that when mouse is pressed, it simultaneously triggers the 9 and 8hp. Any tips for this problem?
-  		fightdetector2 = true;
-  	}//mouseIsPressed
-  }//fightdetector1 is true
-   if(fightdetector2 = true){
-  	if(mouseIsPressed){
-      fightcolor = 255;
-  		bhealth = "7/10";
-  		bosshploss = 75;
-  		sfearstart = sfearpissed;
-  		sfearpissed.looping = false;
-  		//if(sfearpissed.getFrame() == sfearpissed.getLastFrame()){
-		//sfearpissed.stop();
-		//}//animation stop
-  	}//mouseIsPressed
-  }//fightdetector1 is true
+  fill(255);
+  fightx = dist(mouseX, mouseY, 205, 85);
+  fightswitches();
+    /*if(fightdetector1 = true){
+  	 if(mouseIsPressed){
+  		  bhealth = "8/10"; //I have a problem here, when I click the health just skips to 8/10 instead of going to 9/10 first.
+  		  bosshploss = 50; // (read above first) I assume that when mouse is pressed, it simultaneously triggers the 9 and 8hp. Any tips for this problem?
+  		  fightdetector2 = true;
+  	 }//mouseIsPressed
+    }//fightdetector1 is true
+    if(fightdetector2 = true){
+  	 if(mouseIsPressed){
+        fightcolor = 255;
+  		  bhealth = "7/10";
+  		  bosshploss = 75;
+  		  sfearstart = sfearpissed;
+  		  sfearpissed.looping = false;
+  	 }//mouseIsPressed
+    }//fightdetector1 is true*/
+
 }
 
 function allthestuffsodrawcanlookniceandclean(){
@@ -98,7 +103,108 @@ function allthestuffsodrawcanlookniceandclean(){
   allthetext();
 }
 
-function fightoption(){
+function fightswitches(){
+  switch(count){
+    case 1:
+      if(fightx < 110){
+        fightdetector1 = false;
+      }
+      break;
+      //lol this is here so 9/10 works \(^.^)/
+    case 2:
+      if(fightx < 110 /*&& fightdetector1*/){
+        //fightcolor = 100;
+        fightdetector1 = false;
+        fightcolor = 255;
+        bosshploss = 25; //"lower" the boss's visual health
+        bhealth = "9/10"; //lower the boss's numerical health
+      }
+      //if(fightdetector1 = false){
+
+      //}//fightdetector and save to input monster's turn
+      break;
+    case 3:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 50; //"lower" the boss's visual health
+        bhealth = "8/10"; //lower the boss's numerical health
+      }
+      break;
+    case 4:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 75; //"lower" the boss's visual health
+        bhealth = "7/10"; //lower the boss's numerical health
+        sfearstart = sfearpissed;
+        sfearpissed.looping = false;
+      }
+      break;
+    case 5:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 100; //"lower" the boss's visual health
+        bhealth = "6/10"; //lower the boss's numerical health
+      }
+      break;
+    case 6:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 125; //"lower" the boss's visual health
+        bhealth = "5/10"; //lower the boss's numerical health
+      }
+      break;
+    case 7:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 150; //"lower" the boss's visual health
+        bhealth = "4/10"; //lower the boss's numerical health
+        sfearstart = sfearinfuriated;
+        sfearinfuriated.looping = false;
+      }
+      break;
+    case 8:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 175; //"lower" the boss's visual health
+        bhealth = "3/10"; //lower the boss's numerical health
+      }
+      break;
+    case 9:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 200; //"lower" the boss's visual health
+        bhealth = "2/10"; //lower the boss's numerical health
+      }
+      break;
+    case 10:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 225; //"lower" the boss's visual health
+        bhealth = "1/10"; //lower the boss's numerical health
+      }
+      break;
+    case 11:
+      if(fightx < 110){
+        fightcolor = 255;
+        bosshploss = 250; //"lower" the boss's visual health
+        bhealth = "0/10"; //lower the boss's numerical health
+      }
+      fightcolor = 0;
+      magiccolor = 0;
+      itemcolor = 0;
+      fill(255);
+      text("FINISH HIM!", 150, 90);
+      break; //don't forget to do the win screen future me!
+  }//switch
+}//healthswitches
+
+function mousePressed(){
+  count++;
+  fightdetector1 = true;
+  fightcolor = 0;
+}//mousePressed
+
+/*function fightoption(){
   fill(255, 0);
   fightx = dist(mouseX, mouseY, 205, 85);
   if(mouseIsPressed){
@@ -106,18 +212,18 @@ function fightoption(){
   	fightcolor = 100;
   	fightdetector1 = true;
   	bosshploss = 25; //"lower" the boss's visual health
-	bhealth = "9/10"; //lower the boss's numerical health
+	  bhealth = "9/10"; //lower the boss's numerical health
   	} //FIGHT input on menu
   }//if the mouse is pressed
-}//fightoption
+}//fightoption*/
 
 function bossmoving(){
   acceleration.add(0.2);
   velocity.add(acceleration);
   position.add(velocity);
   acceleration.mult(0);
-      if (position.x > 530) { //so Sfear stays near the middle area of the screen
-      position.x = 530;
+      if (position.x > 560) { //so Sfear stays near the middle area of the screen
+      position.x = 560;
       velocity.x *= -1;  // moves left!
     } else if (position.x < 170) {
       velocity.x *= -1; //moves right!
@@ -136,6 +242,7 @@ function keyTyped(){
 	if(key == 'm' || key == 'M'){//if for some weird reason you hate awesome music you can click this.
 		asgore1.stop();
 		asgore2.stop();
+    finalboss.stop();
 	}//press "m" to mute the music
 	if(key == 'z' || key == 'Z'){//starts the fight
 		opening = ' ';
@@ -220,10 +327,6 @@ function allthetext(){ //So this is where all the text-based code will occur, in
 	text(yourhp, 120, 463);
 	text(bhealth, 300, 405); //this is what it'll say for the boss's hp, it will be similar for the hero. How would I get the numbers to decrease by "hit", as in how would I change the numbers in text.
 }
-
-//use this for animation reference later on
-//  if(explode.getFrame()==explode.getLastFrame())
-//  explode.stop();
 
   //pos.add(bossspeed);
   //pos.x++;
