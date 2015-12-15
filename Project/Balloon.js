@@ -1,4 +1,4 @@
-function Balloon(_width, _height){
+function Balloon(){
     this.ballLocX = windowWidth/2;
     this.ballLocY = windowHeight/2;
     this.translateY = 10;
@@ -42,7 +42,6 @@ Balloon.prototype.breatheDisplay = function(colorFill){
     push();
     translate(0, this.translateY);
     noFill();
-    //bezier(622, 379, 577, 384, 662, 464, 588,454); //fix this, it doesn't line up properly 
     bezier(this.ballLocX, this.ballLocY, this.ballLocX - 5, this.ballLocY + 30, this.ballLocX + 5, this.ballLocY + 50, this.ballLocX - 10, this.ballLocY + 80);
     fill(red);
     noStroke();
@@ -51,22 +50,15 @@ Balloon.prototype.breatheDisplay = function(colorFill){
     pop();
 }
 
-Balloon.prototype.action = function(){
-    
-    
-}
-
-Balloon.prototype.actiondisplay = function(){
-    
-    
-}
-
 Balloon.prototype.playSong = function(song){
-    
-    
+    song.play();
+    song.loop();
 }
 
-Balloon.prototype.reset = function(){
+Balloon.prototype.stopSong = function(song){
+    song.stop();
+}
+Balloon.prototype.reset = function(song){
     this.ballLocX = windowWidth/2;
     this.ballLocY = windowHeight/2;
     this.translateY = 10;

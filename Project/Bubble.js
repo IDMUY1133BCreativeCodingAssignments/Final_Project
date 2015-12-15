@@ -1,4 +1,4 @@
-function Bubble(_width, _height){
+function Bubble(){
     this.bubbLocX = windowWidth/2;
     this.bubbLocY = windowHeight/2;
     this.run = 1;
@@ -43,7 +43,10 @@ Bubble.prototype.breatheDisplay = function(bckgFill, colorFill){
 }
 
 Bubble.prototype.action = function(){
-    
+    for(var i = 0; i < 25; i++){
+        var newBubble = Bubble();   
+        
+    }
     
 }
 
@@ -52,12 +55,19 @@ Bubble.prototype.actionDisplay = function(){
     
     
 }
+
 Bubble.prototype.playSong = function(song){
-    
-    
+    song.play();
+    song.loop();
 }
 
-Bubble.prototype.reset = function(){
+Bubble.prototype.stopSong = function(song){
+    song.stop();
+}
+Bubble.prototype.reset = function(song){
+    if(song.isPlaying()){
+    song.stop();
+    }
     this.bubbLocX = windowWidth/2;
     this.bubbLocY = windowHeight/2;
     this.run = 1;

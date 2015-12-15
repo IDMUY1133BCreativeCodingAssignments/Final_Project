@@ -66,10 +66,13 @@ Flower.prototype.actionDisplay = function(){
 }
 
 Flower.prototype.playSong = function(song){
-    
-    
+    song.play();
+    song.loop();
 }
 
+Flower.prototype.stopSong = function(song){
+    song.stop();
+}
 Flower.prototype.reset = function(){
    this.floLocX = windowWidth/2;
     this.floLocY = windowHeight/2;

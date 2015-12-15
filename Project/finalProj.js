@@ -31,7 +31,7 @@
 //http://thisissand.com INSPO
 //http://www.likethisforever.com
 //http://www.ferryhalim.com/orisinal/g3/bells.htm 
-
+//rafael rozendaal inspiration for all the weird little things 
 
 //okay for the generative drawing part
 //maybe just have particles look identical, but their velocity and acceleration is based on the type they are 
@@ -43,6 +43,26 @@
 //one additional class? or two?
 
 //or come up with something completely different (like this thissand.com thing) 
+
+//pop bubbles by clicking, pluck petals, blow out candles, use sound to pop balloons!!! 
+
+//DANG SON I HOPE THIS ALL WORKS BECAUSE THIS ALL SUCKS EXTREME BUTTS
+//figure out: 
+
+//how to make bubbles and balloons float up (make new classes for them?) 
+//get candles to respond to breath, if possible?
+//PLUCKING PETALS WILL PROBABLY B HARDEST
+
+
+// A reference to our box2d world
+var world;
+
+
+// A list for all of our particles
+var particles = [];
+
+var wall;
+
 var red; //global variable for maximum scope of colors 
 var orange;
 var yellow;
@@ -63,7 +83,7 @@ var flames;
 var experiment; 
 var button;
 
-var bubbLocY = windowHeight/2; 
+var bubbLocY = windowHeight/2; //deleting this makes the program fail, why ? 
 
 //all the sound variables
 var fireSound;
@@ -76,10 +96,12 @@ var balloonPressed = false;
 var flowerPressed = false;
 var bubblesPressed = false;
 var flamesPressed = false;
-var exPressed = false;
+var expPressed = false;
 
 var testBubble;
+var testBalloon;
 var testCandle;
+var testFlower;
 
 function preload(){
     fireSound = loadSound("sounds/fireplace.mp3");
@@ -93,18 +115,23 @@ function preload(){
 function setup(){
     createCanvas(windowWidth, windowHeight);
     background(255);
+    world = createWorld();
+
+    world.SetContactListener(new CustomListener());
+
+    wall = new Boundary(width/2, height-20, width, 10);
     earthSound.setVolume(2); //will this make it louder?
     //the colors that you can choose from
     setColors();
     makeButtons();
-    testBalloon = new Balloon();
+    
     testBubble = new Bubble();
     testFlower = new Flower();
     testCandle = new Candle();
+    testBalloon = new Balloon();
 }
 
-function draw(){
-    
+function draw(){    
     if(balloonPressed){ 
         testBalloon.breathe();
         testBalloon.breatheDisplay(red);
@@ -115,12 +142,31 @@ function draw(){
     }
     if(flamesPressed){
         testCandle.breathe();
-        testCandle.breatheDisplay(yellow, red, green, blue);
+        testCandle.breatheDisplay(yellow, red);
     }
     if(bubblesPressed){
         testBubble.breathe();
         testBubble.breatheDisplay(blue, lightblue);
     }
+    if(expPressed){
+        // We must always step through time!
+        var timeStep = 1.0/30;
+        // 2nd and 3rd arguments are velocity and position iterations
+        world.Step(timeStep,10,10);
+        if(mouseIsPressed){
+             console.log("Pressed!");
+             var sz = random(4, 8);
+             particles.push(new Particle(mouseX, mouseY, sz));  
+         }
+         for (var i = particles.length-1; i >= 0; i--) {
+        particles[i].display();
+        if (particles[i].done()) {
+            particles.splice(i,1);
+                }
+         }
+       // background(160);
+        wall.display();
+    } //end of expPressed
     displaySeconds(); 
 }
 
@@ -159,6 +205,7 @@ function makeButtons(){ //creates the buttons needed for the program
 function welcomeText(){
     textSize(32);
     text("Welcome to the relaxation space! You can either practice meditative breathing or go to the experimental room to manipulate the elements. A couple notes before you begin: ");
+    
     text("The meditative breathing follows this pattern. Breathe in for 4 seconds, hold your breath for 7, and exhale for 8. Each room should guide you through this process. Do this as many times as you like until you feel calm."); 
     
 }
@@ -169,19 +216,25 @@ it also restarts all the values
 function baPressed(){
     testBalloon.reset();
     adjustSong(airSound);
+    translateY = 10;
+    run = 1;
     balloonPressed = true;
     bubblesPressed = false;
     flamesPressed = false;
     flowerPressed = false;
+    expPressed = false;
+
 }
 
 function buPressed(){
-    testBubble.reset();
+    testBubble.reset(bubbleSound);
     adjustSong(bubbleSound);
     bubblesPressed = true;
     balloonPressed = false;
     flamesPressed = false;
     flowerPressed = false;
+    expPressed = false;
+
 }
 
 function fPressed(){
@@ -191,6 +244,7 @@ function fPressed(){
     balloonPressed = false;
     flowerPressed = false;
     bubblesPressed = false;
+    expPressed = false;
 }
 
 function floPressed(){
@@ -200,6 +254,7 @@ function floPressed(){
     flamesPressed = false;
     balloonPressed = false;
     bubblesPressed = false;
+    expPressed = false;
 }
 
 function exPressed(){
@@ -207,13 +262,12 @@ function exPressed(){
     flamesPressed = false;
     balloonPressed = false;
     bubblesPressed = false;
-    exPressed = true;
-    
+    expPressed = true;
 }
 
 function adjustSong(theSong){ //find out how to get a song playing at the time stop playing 
     if(theSong.isPlaying()){
-     theSong.stop();   
+      theSong.stop();   
     }
     theSong.play();
     theSong.loop();
@@ -234,10 +288,8 @@ function displaySeconds(){
 }
 
 /*
-function runAgain(){ //used to go through breathing thing again after running once. 
-     milliseconds = millis();
-    fourSecond = milliseconds + 4000;
-    sevenSecond = fourSecond + 7000;
-    eightSecond = sevenSecond + 8000; 
+function mousePressed(){
+    var sz = random(4,8);
+    particles.push(new Particle(mouseX, mouseY, sz));  
 }
 */
