@@ -32,6 +32,17 @@
 //http://www.likethisforever.com
 //http://www.ferryhalim.com/orisinal/g3/bells.htm 
 
+
+//okay for the generative drawing part
+//maybe just have particles look identical, but their velocity and acceleration is based on the type they are 
+//things left to do
+
+//set up circles that when user hovers over them, and clicks, it changes the color to that 
+//construct four different particle systems
+//when particles from them interact, things change 
+//one additional class? or two?
+
+//or come up with something completely different (like this thissand.com thing) 
 var red; //global variable for maximum scope of colors 
 var orange;
 var yellow;
@@ -52,25 +63,7 @@ var flames;
 var experiment; 
 var button;
 
-var ballLocX;
-var ballLocY;
-var bubbLocX = windowWidth/2;
 var bubbLocY = windowHeight/2; 
-var bubbLocationsX = [];
-var bubbLocationsY = [];
-var candLocX;
-var candLocY; 
-var cand2LocX;
-var cand2LocY;
-var cand3LocX;
-var cand3LocY; 
-
-//used for calculating duration of breathine exercises 
-var theSec;
-var fourSecond;
-var sevenSecond;
-var eightSecond;
-var milliseconds; 
 
 //all the sound variables
 var fireSound;
@@ -79,17 +72,14 @@ var waterSound;
 var earthSound;
 var bubbleSound;
 
-//have array of triangle coordinates 
-var translateY = 10;
-
-//used for counting seconds 
-var run = 1;
-
 var balloonPressed = false;
 var flowerPressed = false;
 var bubblesPressed = false;
 var flamesPressed = false;
 var exPressed = false;
+
+var testBubble;
+var testCandle;
 
 function preload(){
     fireSound = loadSound("sounds/fireplace.mp3");
@@ -107,31 +97,29 @@ function setup(){
     //the colors that you can choose from
     setColors();
     makeButtons();
-    
-    ballLocX = windowWidth/2;
-    ballLocY = windowHeight/2;
-    bubbLocX = windowWidth/2;
-    bubbLocY = windowHeight/2;
-    candLocY = 30; 
-    cand2LocY = 30;
-    cand3LocY = 30;
-
+    testBalloon = new Balloon();
+    testBubble = new Bubble();
+    testFlower = new Flower();
+    testCandle = new Candle();
 }
 
 function draw(){
-    var currentTime = millis();
     
     if(balloonPressed){ 
-        airBreath(); 
+        testBalloon.breathe();
+        testBalloon.breatheDisplay(red);
     }
     if(flowerPressed){
-        earthBreath();
+        testFlower.breathe(mint, red);
+        testFlower.breatheDisplay(yellow);
     }
     if(flamesPressed){
-        fireBreath();
+        testCandle.breathe();
+        testCandle.breatheDisplay(yellow, red, green, blue);
     }
     if(bubblesPressed){
-        waterBreath();
+        testBubble.breathe();
+        testBubble.breatheDisplay(blue, lightblue);
     }
     displaySeconds(); 
 }
@@ -171,7 +159,6 @@ function makeButtons(){ //creates the buttons needed for the program
 function welcomeText(){
     textSize(32);
     text("Welcome to the relaxation space! You can either practice meditative breathing or go to the experimental room to manipulate the elements. A couple notes before you begin: ");
-    
     text("The meditative breathing follows this pattern. Breathe in for 4 seconds, hold your breath for 7, and exhale for 8. Each room should guide you through this process. Do this as many times as you like until you feel calm."); 
     
 }
@@ -180,9 +167,8 @@ the purpose of the next four functions is to prevent multiple breathing exercise
 it also restarts all the values
 */
 function baPressed(){
+    testBalloon.reset();
     adjustSong(airSound);
-    translateY = 10;
-    run = 1;
     balloonPressed = true;
     bubblesPressed = false;
     flamesPressed = false;
@@ -190,10 +176,8 @@ function baPressed(){
 }
 
 function buPressed(){
+    testBubble.reset();
     adjustSong(bubbleSound);
-    run = 1;
-    bubbLocX = windowWidth/2;
-    bubbLocY = windowHeight/2;
     bubblesPressed = true;
     balloonPressed = false;
     flamesPressed = false;
@@ -201,8 +185,8 @@ function buPressed(){
 }
 
 function fPressed(){
+    testCandle.reset();
     adjustSong(fireSound);
-    run = 1;
     flamesPressed = true;
     balloonPressed = false;
     flowerPressed = false;
@@ -210,8 +194,8 @@ function fPressed(){
 }
 
 function floPressed(){
+    testFlower.reset();
     adjustSong(earthSound);
-    run = 1;
     flowerPressed = true;
     flamesPressed = false;
     balloonPressed = false;
@@ -219,7 +203,6 @@ function floPressed(){
 }
 
 function exPressed(){
-    run = 1;
     flowerPressed = false;
     flamesPressed = false;
     balloonPressed = false;
@@ -240,152 +223,6 @@ function chooseColor(){
     
 }
 
-function airBreath(){
-    if(run == 1){
-    milliseconds = millis();  
-    fourSecond = milliseconds + 4000;
-    sevenSecond = fourSecond + 7000;
-    eightSecond = sevenSecond + 8000;
-    run = 2; //prevents milliSeconds from updating over and over again 
-    }
-    background(158, 212, 255);
-    stroke(0);
-    strokeWeight(1);
-    fill(red);
-    push();
-    if(millis()< fourSecond){
-        translateY = translateY - 1;
-    }
-    else if(millis() < sevenSecond){
-        translateY = translateY - random(-.5, .5);
-    }
-   else if(millis() < eightSecond){
-        translateY = translateY + .5;
-   }
-    else if(millis() > eightSecond){
-     runAgain();
-     background(158, 212, 255);
-    }
-    translate(0, translateY);
-    noFill();
-    //bezier(622, 379, 577, 384, 662, 464, 588,454); //fix this, it doesn't line up properly 
-    bezier(ballLocX, ballLocY, ballLocX - 5, ballLocY + 30, ballLocX + 5, ballLocY + 50, ballLocX - 10, ballLocY + 80);
-    fill(red);
-    noStroke();
-    triangle(ballLocX, ballLocY+10, ballLocX - 10, ballLocY + 40, ballLocX + 10,  ballLocY + 40);
-    ellipse(ballLocX, ballLocY, 60, 65);
-    pop();
-}
-
-
-function earthBreath(){ //http://p5js.org/examples/demos/Hello_P5_Simple_Shapes.php
-    if(run == 1){
-    background(mint); 
-    milliseconds = millis();  
-    fourSecond = milliseconds + 4000;
-    sevenSecond = fourSecond + 7000;
-    eightSecond = sevenSecond + 8000;
-    run = 2;
-    }
-    push();
-    fill(red, 150);
-    noStroke();
-    translate(windowWidth/2, windowHeight/2)
-    if(millis()<fourSecond){
-        rotate(PI/3);
-        ellipse(0, 30, 20, 80);
-        rotate(PI/3);
-        ellipse(0, 30, 20, 80);
-    }
-    else if(millis() < sevenSecond){
-        rotate(PI);
-        ellipse(0, 30, 20, 80);
-        rotate(PI);
-        ellipse(0, 30, 20, 80);
-    }
-   else if(millis() < eightSecond){
-       rotate(5*PI/3);
-        ellipse(0, 30, 20, 80);
-       rotate(5*PI/3);
-       ellipse(0, 30, 20,80);
-    }
-     else if(millis() > eightSecond){
-     runAgain();
-    }
-    pop();
-    fill(yellow);
-    noStroke();
-    ellipse(windowWidth/2, windowHeight/2, 20, 20);
-}
-    
-function fireBreath(){
-    //melting candle
-    background(180);
-    noStroke();
-    fill(yellow);
-    triangle(windowWidth/2 + 1, windowHeight/2-60, windowWidth/2 + 39, windowHeight/2 - 60, windowWidth/2 + 20, windowHeight/2-100);
-    ellipse(windowWidth/2 + 20, windowHeight/2 - 60, 35, 40);
-    if(run == 1){
-    milliseconds = millis();  
-    fourSecond = milliseconds + 4000;
-    sevenSecond = fourSecond + 7000;
-    eightSecond = sevenSecond + 8000;
-    run = 2;
-    }
-    push();
-    if(millis()<fourSecond){
-        candLocY++;
-    }
-    else if(millis() < sevenSecond){
-        cand2LocY++;
-    }
-   else if(millis() < eightSecond){
-       cand3LocY++;
-    }
-     else if(millis() > eightSecond){
-      runAgain();
-    }
-    noStroke();
-    fill(green);
-    rect(windowWidth/2, windowHeight/2 - 30, 40, candLocY); //fix these a little 
-    fill(red);
-    rect(windowWidth/2, windowHeight/2, 40, cand2LocY);
-    fill(blue);
-    rect(windowWidth/2, windowHeight/2 + 30, 40, cand3LocY);
-    pop();
-
-}
-
-function waterBreath(){ //add bubble details later  (little white reflective part)
-    background(blue);
-    if(run == 1){
-    milliseconds = millis();  
-    fourSecond = milliseconds + 4000;
-    sevenSecond = fourSecond + 7000;
-    eightSecond = sevenSecond + 8000;
-    run = 2;
-    }
-   
-    if(millis()<fourSecond){
-        bubbLocY = bubbLocY - 1 ;
-    }
-    else if(millis() < sevenSecond){
-        bubbLocY = bubbLocY;
-    }
-   else if(millis() < eightSecond){
-        bubbLocY = bubbLocY + .5;
-    }
-     else if(millis() > eightSecond){
-     runAgain();
-    }
-    fill(lightblue);
-    noStroke();
-    ellipse(bubbLocX, bubbLocY, 50, 50);
-    var offset = random(-1, 1);
-    //bubbLocY++;
-    bubbLocX = offset + bubbLocX;
-}
-
 function displaySeconds(){
     push();
     fill(255);
@@ -396,9 +233,11 @@ function displaySeconds(){
     pop();
 }
 
+/*
 function runAgain(){ //used to go through breathing thing again after running once. 
      milliseconds = millis();
     fourSecond = milliseconds + 4000;
     sevenSecond = fourSecond + 7000;
     eightSecond = sevenSecond + 8000; 
 }
+*/
