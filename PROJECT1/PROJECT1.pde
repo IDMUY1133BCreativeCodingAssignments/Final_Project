@@ -3,17 +3,49 @@
 
 Eye eye1, eye2;
 float e;
+PImage[] spiders = new PImage[1000];
+
 PImage spider;
+
+int getRandomX(){
+  return int(random(1000));
+}
+
+//not sure why there is an error here
+//trying to get an array of random numbers from 0-1000 to represent the x-coordinates of new spiders
+int[] spiderX = {
+  for(int i = 0; i<1000; i++){
+    getRandomX();
+  }
+};
+
+//y coordinate is always 0 because all spiders start at the top
+int spiderY = 0;
+ 
+
 
 void setup() {
 
   size(1000, 800);
   smooth();
   noStroke();
+  frameRate(400);
 
   eye1 = new Eye(width/2-290, height/2-210, 70);
   eye2 = new Eye(width/2-190, height/2-210, 70);
-  spider = loadImage("spider.png");
+  
+    //spiders move down screen
+    
+  spider =  loadImage("spider.png");
+  
+    /*
+    for( int i=0; i< spiders.length; i++) {
+      spiders[i] = spider =  loadImage("spider.png");
+      image(spider, random(0,1000), 0, spider.width/2, spider.height/2);
+      translate(
+    }
+    
+    */
 }
 
 void draw() {
@@ -22,7 +54,7 @@ void draw() {
   e = map(mouseX, 0, 700, 100, -100);
 
   //spider as mouse
-  image(spider, mouseX-50, mouseY-50, spider.width/2, spider.height/2);
+  //image(spider, mouseX-50, mouseY-50, spider.width/2, spider.height/2);
 
  translate(random(-8, 8),0);
  translate(0,430);
@@ -47,16 +79,13 @@ void draw() {
   
   */
   
-  //head moves horizontally at bottom of screen
-  
-
-    keyPressed();
-
-
-  
-  
+  //head moves horizontally at bottom of screen 
   //head is controlled by left and right arrows
-  //spiders move down screen
+  
+     keyPressed();
+
+
+  
   //how do I scale body()??
   //head gets bigger with every bite/interaction with spider
   //As game progresses, more spiders appear frequently
@@ -78,6 +107,19 @@ void draw() {
   eye2.display();
 }
 
+void spiderMove(){
+   for (int i=0; i<1; i++){
+    image(spider, random(1000), 0, spider.width/2, spider.height/2);
+    spiderY[i]+=random(5);
+  }
+  
+  //each spider moves down 50 pixels at a time until it reaches the bottom of screen
+  for(spiderY=0; spiderY<1000; spiderY+=50){
+    translate(0, spiderY);
+  
+  }
+}
+  
 void keyPressed(){
     if (key == CODED) {
     if (keyCode == LEFT) {
@@ -89,6 +131,7 @@ void keyPressed(){
     }
     } 
 }
+
 
 void body() {
   //fill(250, 0, 60);
