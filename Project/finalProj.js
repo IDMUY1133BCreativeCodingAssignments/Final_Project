@@ -148,8 +148,9 @@ function draw(){
         testBubble.breathe();
         testBubble.breatheDisplay(blue, lightblue);
     }
-    if(expPressed){
+    if(expPressed){ //get rid of all the particles when you leave ? 
         // We must always step through time!
+        background(160);
         var timeStep = 1.0/30;
         // 2nd and 3rd arguments are velocity and position iterations
         world.Step(timeStep,10,10);
@@ -164,7 +165,6 @@ function draw(){
             particles.splice(i,1);
                 }
          }
-       // background(160);
         wall.display();
     } //end of expPressed
     displaySeconds(); 
@@ -209,10 +209,12 @@ function welcomeText(){
     text("The meditative breathing follows this pattern. Breathe in for 4 seconds, hold your breath for 7, and exhale for 8. Each room should guide you through this process. Do this as many times as you like until you feel calm."); 
     
 }
+
 /*
 the purpose of the next four functions is to prevent multiple breathing exercises running at once. 
 it also restarts all the values
 */
+
 function baPressed(){
     testBalloon.reset();
     adjustSong(airSound);

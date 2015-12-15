@@ -39,7 +39,10 @@ function Particle(x,y,r) {
 
   // Change color when hit
   this.change = function() {
-    this.col = color(255, 0, 0);
+     /* if(this.r < 30){
+    this.r++;
+      }*/
+      this.col = color(255, 0, 0);
   }
 
   // This function removes the particle from the box2d world
