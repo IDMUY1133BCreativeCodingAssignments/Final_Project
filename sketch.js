@@ -7,7 +7,7 @@ var enemies;
 var score=0;
 var userImg,enemyImg,cloudsImg;
 var gameover;
-var birdrate=70;
+var birdrate=100;
 var points=0;
 
 
@@ -92,10 +92,11 @@ function draw(){
         if (frameCount%birdrate===0){//creating bird enemies every 70 frames
             var enemy=createSprite(random(width),user.position.y-height,50,50);
             enemy.addImage(enemyImg);
-            if (enemy.position.x<width/2){
-                enemy.addSpeed(10,random(-90,45));
-            }
-            else enemy.addSpeed(10,random(225,270));
+            var s=int(random(userballoons.length));
+            console.log(s);
+            enemy.attractionPoint(5,userballoons[s].position.x,userballoons[s].position.y);
+//            }
+//            else enemy.attractionPoint(5,random(-90,-70));
             enemies.add(enemy);
         }
         if(frameCount%5===0){
@@ -148,6 +149,7 @@ function newGame() {
     user.position.y = 500;
     sky.position.x = width/2;
     sky.position.y = height/2;
+    
 }
 
 function birdHit(userballoons,enemy){
