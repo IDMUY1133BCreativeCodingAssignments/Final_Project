@@ -36,9 +36,12 @@ Balloon.prototype.breathe = function(){
 
 Balloon.prototype.breatheDisplay = function(colorFill){
     background(158, 212, 255);
+    push();
+    fill(0);
     stroke(0);
     strokeWeight(1);
     fill(colorFill);
+    pop();
     push();
     translate(0, this.translateY);
     noFill();

@@ -21,22 +21,14 @@ function CustomListener() {
     var relation; 
       
     if (o1 instanceof Particle && o2 instanceof Particle) {
-      //o1.change(o1.getType());
-      //o2.changeOther(o2.getType());
-        console.log("O1 " + o1.getType());
-        console.log("O2 " + o2.getType());
-        
-      relation = o1.getRelationship(o1.getType(), o2.getType());
-        //not getting anything from relation? 
-        
-        console.log("Relation" + relation);
-      o1.change(relation);
-      o2.changeOther(relation);
-        //ok so o1.getType and o2.gettype work!! 
+      relation = o1.getRelationship(o1.getType(), o2.getType()); //retrieves relationship between o1 and o2 based on type
+      o1.change(relation); //determines how to change particle 1 based on relationship
+      o2.changeOther(relation); //determines how to change particle 2 based on relationship
     }
   }
 
   // Objects stop touching each other
+  
   this.EndContact = function(contact) {
   }
 
@@ -45,4 +37,5 @@ function CustomListener() {
 
   this.PostSolve = function(contact,manifold) {
   }
+  
 }

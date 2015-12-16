@@ -42,9 +42,9 @@ Candle.prototype.breatheDisplay = function(colorFill, colorFill1){
     triangle(windowWidth/2 + 1, windowHeight/2-60, windowWidth/2 + 39, windowHeight/2 - 60, windowWidth/2 + 20, windowHeight/2-100);
     ellipse(windowWidth/2 + 20, windowHeight/2 - 60, 35, 40);
     pop();
+    
     push();
-        noStroke();
-
+    noStroke();
     rect(windowWidth/2 + 15, windowHeight/2 - 20 + this.translateY, windowWidth/2 + 50, windowHeight/2 + 250);
     pop();
 }

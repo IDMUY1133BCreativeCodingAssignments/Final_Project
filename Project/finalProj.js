@@ -75,9 +75,12 @@ var lightblue;
 var whichColor; 
 var mint; 
 var indigo;
+var orangeEx;
+var blueEx;
+var greenEx;
+
 var particleColor; //color of elemental particle
 var type; //type of particle (Earth, air, water, fire)
-
 
 var balloon; // all the buttons
 var flower;
@@ -106,13 +109,12 @@ var testBalloon;
 var testCandle;
 var testFlower;
 
-function preload(){
+function preload(){ //preload the sounds used in the file
     fireSound = loadSound("sounds/fireplace.mp3");
     airSound = loadSound("sounds/wind-chimes.mp3");
     earthSound = loadSound("sounds/rustle.mp3");
     waterSound = loadSound("sounds/rain.mp3");   
     bubbleSound = loadSound("sounds/bubble.mp3");
-    background(127);
 }
     
 function setup(){
@@ -122,40 +124,53 @@ function setup(){
 
     world.SetContactListener(new CustomListener());
 
-    wall = new Boundary(width/2, height-(height/2), width, 10);
+    wall = new Boundary(width/2, height-(height/2), width, 20);
     earthSound.setVolume(2); //will this make it louder?
     //the colors that you can choose from
     setColors();
     makeButtons();
-    
+    welcomeText();
     testBubble = new Bubble();
     testFlower = new Flower();
     testCandle = new Candle();
     testBalloon = new Balloon();
     
-    particleColor = green;
+    particleColor = black;
 }
 
 function draw(){    
     if(balloonPressed){ 
         testBalloon.breathe();
         testBalloon.breatheDisplay(red);
+            displaySeconds(); 
+
     }
     if(flowerPressed){
         testFlower.breathe(mint, red);
         testFlower.breatheDisplay(yellow);
+            displaySeconds(); 
+
     }
     if(flamesPressed){
         testCandle.breathe();
         testCandle.breatheDisplay(yellow, red);
+            displaySeconds(); 
+
     }
     if(bubblesPressed){
         testBubble.breathe();
         testBubble.breatheDisplay(blue, lightblue);
+            displaySeconds(); 
+
     }
     if(expPressed){ //get rid of all the particles when you leave ? 
         // We must always step through time!
-        background(160);
+        background(0);
+        push();
+        fill(255);
+        textSize(15);
+        text(" Left Arrow: Air \n Right Arrow: Earth \n Up Arrow: Water \n Down Arrow: Fire", 15, 40);
+        pop();
         var timeStep = 1.0/30;
         // 2nd and 3rd arguments are velocity and position iterations
         world.Step(timeStep,10,10);
@@ -170,8 +185,10 @@ function draw(){
                 }
          }
         wall.display();
+        hideSeconds();
     } //end of expPressed
-    displaySeconds(); 
+        //displaySeconds(); 
+
 }
 
 function setColors(){ //defines all the colors needed for program 
@@ -185,7 +202,10 @@ function setColors(){ //defines all the colors needed for program
     black = color(0, 0, 0);
     lightblue = color(172, 224, 242);
     mint = color(146, 225, 171);
-    indigo = color(126, 135, 252);    
+    indigo = color(126, 135, 252);   
+    orangeEx = color(235, 141, 15);
+    blueEx = color(77, 99, 255);
+    greenEx = color(0, 161, 64);
 }
 
 function makeButtons(){ //creates the buttons needed for the program 
@@ -209,12 +229,12 @@ function makeButtons(){ //creates the buttons needed for the program
 /** preliminary text user sees upon beginning thing**/ 
 
 function welcomeText(){ 
-    textSize(32);
-    text("Welcome to the relaxation space! You can either practice meditative breathing or go to the experimental room to manipulate the elements. A couple notes before you begin: ");
+    textSize(16);
+    text("Welcome to the relaxation space! \nYou can either practice meditative breathing or go to the experimental room to manipulate the elements. \nA couple notes before you begin: ", 0, windowHeight/2);
     
-    text("The meditative breathing follows this pattern. Breathe in for 4 seconds, hold your breath for 7, and exhale for 8. Each room should guide you through this process. Do this as many times as you like until you feel calm."); 
-    
-    text("For the experimental room portion, the left arrow makes particles air, the right arrow makes particles earth, the up arrow makes particles water, and the down arrow makes particles fire."); 
+    text("The meditative breathing follows this pattern. \nBreathe in for 4 seconds, hold your breath for 7, and exhale for 8. \nEach room should guide you through this process. \nDo this as many times as you like until you feel calm.", 0, windowHeight/2 + 80); 
+
+    text("\nThe experiment room allows you to play around with the four elements: air, water, earth, and fire.", 0, windowHeight/2 + 160);
     
 }
 
@@ -226,8 +246,8 @@ it also restarts all the values
 function baPressed(){
     testBalloon.reset();
     adjustSong(airSound);
-    translateY = 10;
-    run = 1;
+    //translateY = 10;
+    //run = 1;
     balloonPressed = true;
     bubblesPressed = false;
     flamesPressed = false;
@@ -286,31 +306,39 @@ function adjustSong(theSong){ //find out how to get a song playing at the time s
 function displaySeconds(){ //shows timer for guidance 
     push();
     fill(255);
-    rect(0, 0, 40, 40);
+    rect(0, 0, 55, 55);
     fill(0);
     textSize(30);
     text(second(), 5, 35);
     pop();
 }
 
+function hideSeconds(){
+    push();
+    fill(0);
+    noStroke();
+    rect(0, 0, 55, 55);    
+    pop();
+}
+
 function keyPressed(){ //changes colors of particles in experimental room 
-    if(keyCode === LEFT_ARROW){
+   if(keyCode === LEFT_ARROW){
         particleColor = white;
         type = 0;
     }
     
     if(keyCode === RIGHT_ARROW){
-        particleColor = green;
+        particleColor = greenEx;
         type = 1; 
     }
     
     if(keyCode === UP_ARROW){
-        particleColor = blue;
+        particleColor = blueEx;
         type = 2;
     }
     
     if(keyCode === DOWN_ARROW){
-        particleColor = orange;
+        particleColor = orangeEx;
         type = 3;
     }
 }

@@ -41,36 +41,47 @@ function Particle(x,y,r, _color, type) {
   // Change color when hit
   this.change = function(_type1) {
      if(_type1 == "EaWa"){ //particle 1 is earth, particle 2 is fire
-         if(this.r < 30){
+         if(this.r < 20){
              this.r++; //grows earth particle
          }
      }
      if(_type1 == "EaFi"){ //particle 1 is earth, particle 2 is fire
          this.col = color(235, 173, 86); //changes earth particle to fire color
+         this.type = 3;
       }
       
       if(_type1 == "FiWa"){ //particle 1 is fire, particle 2 is water
        if(this.r >= 0){ //shrinks fire particle
            this.r = this.r - 1;
       }
+      if(_type1 == "Air"){
+          this.body.SetAngularVelocity(random(-100, 100));
+          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-20, 20) , random(-20, 20)));
+      } 
           //this.col = color(255, 0, 0);
   }
   }
  
   this.changeOther = function(_type2){
       if(_type2 == "WaEa"){ //particle 1 is water, particle 2 is earth)
-           if(this.r < 30){
-             this.r++; //grows earth particle
+           if(this.r < 15){
+             this.r++; //grows earth particle       
          }
       }
       if(_type2 == "FiEa"){ //particle 1 is fire, particle 2 is earth
-       this.col = color(235, 173, 86);   
+          this.col = color(235, 173, 86);   
+          this.type = 3;
       }
       
       if(_type2 == "WaFi"){ //particle 1 is water, particle 2 is fire
            if(this.r >= 0){ //shrinks fire particle
            this.r = this.r - 1;
       }
+          
+      }
+      if(_type2 == "Air"){
+          this.body.SetAngularVelocity(random(-100, 100));
+          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-20, 20) , random(-20, 20)));
       }
       //this.col = color(0, 0, 0);
   }
@@ -97,8 +108,11 @@ function Particle(x,y,r, _color, type) {
       else if(_type1 == 1 && _type2 == 3){ //earth & fire
           this.relation = "EaFi";  
       }
-      else if(_type1 == 3 && _type2 == 2){ //fire & water
-          this.relation = "FiWa"; 
+      else if(_type1 == 3 && _type2 == 1){ //fire & earth
+          this.relation = "FiEa"; 
+      }
+      else if(_type1 == 0 || _type2 ==0){
+          this.relation = "Air";   
       }
       return this.relation; 
   }
