@@ -140,7 +140,7 @@ function draw(){
 //    
     background(182,237,252);
     
-    userballoons.bounce(enemies,birdHit);
+    enemies.bounce(userballoons,birdHit);
     
     drawSprites(clouds);
     drawSprites(enemies);
@@ -148,6 +148,7 @@ function draw(){
 //    drawSprite(sky);
     drawSprites(userballoons);
     
+
 }//close draw
 
 function die(){
@@ -166,7 +167,8 @@ function newGame() {
     
 }
 
-function birdHit(userballoons,enemy){
+function birdHit(enemy,userballoons){
     userballoons.remove();
     enemy.remove();
+    
 }
