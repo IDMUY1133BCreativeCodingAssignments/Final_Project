@@ -6,7 +6,7 @@ as time goes on tweets are popping up accordingly
 */
 
 /* tweets are accessed through temboo to twitter api*/
-/* digital clock comes from http://www.openprocessing.org/sketch/16037 */
+/* digital clock is inspired by http://www.openprocessing.org/sketch/16037 */
 
 
 import com.temboo.core.*;
@@ -25,6 +25,7 @@ void setup() {
   digitalClock = new DigitalClock(40, width/2, width/10);
   // Run the Tweets Choreo function
   runTweetsChoreo();
+  frameRate(200);
 }
 
  
@@ -35,7 +36,7 @@ void draw() {
   background(0);
   
   //displaying clock
-  digitalClock.getTime();
+  digitalClock.setTime();
   digitalClock.display();
   
   //displaying timeline
