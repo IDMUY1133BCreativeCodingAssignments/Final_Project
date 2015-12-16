@@ -75,6 +75,9 @@ var lightblue;
 var whichColor; 
 var mint; 
 var indigo;
+var particleColor; //color of elemental particle
+var type; //type of particle (Earth, air, water, fire)
+
 
 var balloon; // all the buttons
 var flower;
@@ -129,6 +132,8 @@ function setup(){
     testFlower = new Flower();
     testCandle = new Candle();
     testBalloon = new Balloon();
+    
+    particleColor = green;
 }
 
 function draw(){    
@@ -155,9 +160,8 @@ function draw(){
         // 2nd and 3rd arguments are velocity and position iterations
         world.Step(timeStep,10,10);
         if(mouseIsPressed){
-             console.log("Pressed!");
              var sz = random(4, 8);
-             particles.push(new Particle(mouseX, mouseY, sz));  
+             particles.push(new Particle(mouseX, mouseY, sz, particleColor, type));  
          }
          for (var i = particles.length-1; i >= 0; i--) {
         particles[i].display();
@@ -202,11 +206,15 @@ function makeButtons(){ //creates the buttons needed for the program
     experiment.mousePressed(exPressed); //call thing that makes the objects ? or just make boolean true like it is righ tnow 
 }
 
-function welcomeText(){
+/** preliminary text user sees upon beginning thing**/ 
+
+function welcomeText(){ 
     textSize(32);
     text("Welcome to the relaxation space! You can either practice meditative breathing or go to the experimental room to manipulate the elements. A couple notes before you begin: ");
     
     text("The meditative breathing follows this pattern. Breathe in for 4 seconds, hold your breath for 7, and exhale for 8. Each room should guide you through this process. Do this as many times as you like until you feel calm."); 
+    
+    text("For the experimental room portion, the left arrow makes particles air, the right arrow makes particles earth, the up arrow makes particles water, and the down arrow makes particles fire."); 
     
 }
 
@@ -225,7 +233,6 @@ function baPressed(){
     flamesPressed = false;
     flowerPressed = false;
     expPressed = false;
-
 }
 
 function buPressed(){
@@ -275,11 +282,7 @@ function adjustSong(theSong){ //find out how to get a song playing at the time s
     theSong.loop();
 }
 
-function chooseColor(){
-    
-}
-
-function displaySeconds(){
+function displaySeconds(){ //shows timer for guidance 
     push();
     fill(255);
     rect(0, 0, 40, 40);
@@ -289,9 +292,24 @@ function displaySeconds(){
     pop();
 }
 
-/*
-function mousePressed(){
-    var sz = random(4,8);
-    particles.push(new Particle(mouseX, mouseY, sz));  
+function keyPressed(){ //changes colors of particles in experimental room 
+    if(keyCode === LEFT_ARROW){
+        particleColor = white;
+        type = 0;
+    }
+    
+    if(keyCode === RIGHT_ARROW){
+        particleColor = green;
+        type = 1; 
+    }
+    
+    if(keyCode === UP_ARROW){
+        particleColor = blue;
+        type = 2;
+    }
+    
+    if(keyCode === DOWN_ARROW){
+        particleColor = orange;
+        type = 3;
+    }
 }
-*/

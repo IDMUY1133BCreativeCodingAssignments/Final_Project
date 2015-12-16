@@ -20,8 +20,13 @@ function CustomListener() {
     var o2 = b2.GetUserData();
 
     if (o1 instanceof Particle && o2 instanceof Particle) {
-      o1.change();
-      o2.change();
+      o1.change(o1.getType());
+      o2.changeOther(o2.getType());
+      //o1.getRelationship(o1.getType(), o2.getType());
+        
+        console.log("O1" + o1.getType());
+        console.log("O2" + o2.getType());
+        //ok so o1.getType and o2.gettype work!! 
     }
   }
 
