@@ -3,6 +3,7 @@ var sky;
 var user;
 var userballoons;
 var b1,b2,b3,b4,b5;
+var clouds;
 var enemies;
 var score=0;
 var userImg,enemyImg,cloudsImg;
@@ -12,16 +13,16 @@ var points=0;
 
 
 function setup(){
-	createCanvas(600,600);
+	createCanvas(400,600);
     
     userImg=loadImage("data/balloons-36236_960_720.png");
     enemyImg=loadImage("data/9cprBLgcE.png");
     cloudsImg=loadImage("data/bg.png");
     
-    user=createSprite(width/2,500,50,50); 
+    user=createSprite(width/2,500,50,50); //USER SPRITE
 //    user.addImage(userImg);
     user.shapeColor=color(255);
-    user.velocity.y=-6;
+    user.velocity.y=-6;// the rate of user going up
     
     userballoons = new Group();
     
@@ -35,17 +36,18 @@ function setup(){
     userballoons.add(b4);
     b5 = createSprite(user.position.x+15,user.position.y-115,30,30);
     userballoons.add(b5);
-    userballoons.shapeColor=color(255);
+    userballoons.shapeColor=color(255);//random colors for each balloon
     
     for (i=0;i<userballoons.length;i++){
-        userballoons[i].velocity.y=-6;
+        userballoons[i].velocity.y=-6;//same rate as the user
     }
     
-    sky=createSprite(width/2,height/2);
+    //sky=createSprite(width/2,height/2);
     //sky.shapeColor=color(0);
-    sky.addImage(cloudsImg);
+    //sky.addImage(cloudsImg);
         //img 500x362
     
+    clouds= new Group();
     enemies= new Group();
     gameover=true;
     updateSprites(false);
@@ -89,11 +91,17 @@ function draw(){
 //        if(user.position.x>width){
 //            user.position.x=width-user.width/2;
 //        }
+        if (frameCount%50===0){
+            var cloud=createSprite(random(width),user.position.y-height,100,50);
+            cloud.shapeColor=color(255,150);
+            clouds.add(cloud);
+        }
+        
         if (frameCount%birdrate===0){//creating bird enemies every 70 frames
             var enemy=createSprite(random(width),user.position.y-height,50,50);
             enemy.addImage(enemyImg);
             var s=int(random(userballoons.length));
-            console.log(s);
+            //console.log(s);
             enemy.attractionPoint(5,userballoons[s].position.x,userballoons[s].position.y);
 //            }
 //            else enemy.attractionPoint(5,random(-90,-70));
@@ -102,7 +110,7 @@ function draw(){
         if(frameCount%5===0){
             points+=1;
         }
-        if (points<50){
+        if (points<50){//possible leveling of birds
             birdrate=85;
         }
         else if(points<100){
@@ -116,22 +124,28 @@ function draw(){
                 enemies[i].remove();
             }//close if
         }//close for
+        for (var i = 0; i<clouds.length;i++){//deleting clouds that have passed
+            if(clouds[i].position.y>height+25){
+                clouds[i].remove();
+            }//close if
+        }//close for
     }
     
-    console.log(user.position.y);
-    camera.position.y=user.position.y-100;
+    //console.log(user.position.y);
+    camera.position.y=user.position.y-190;
     
-    if (camera.position.y<sky.position.y-sky.height+height/2){
-        sky.position.y=-sky.height;
-    }//vert scroll
-    
+//    if (camera.position.y<sky.position.y-sky.height+height/2){
+//        sky.position.y=-sky.height;
+//    }//vert scroll
+//    
     background(182,237,252);
     
     userballoons.bounce(enemies,birdHit);
-
+    
+    drawSprites(clouds);
     drawSprites(enemies);
     drawSprite(user);
-    drawSprite(sky);
+//    drawSprite(sky);
     drawSprites(userballoons);
     
 }//close draw
@@ -147,8 +161,8 @@ function newGame() {
     updateSprites(true);
     user.position.x = width/2;
     user.position.y = 500;
-    sky.position.x = width/2;
-    sky.position.y = height/2;
+//    sky.position.x = width/2;
+//    sky.position.y = height/2;
     
 }
 
