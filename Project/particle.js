@@ -40,14 +40,38 @@ function Particle(x,y,r, _color, type) {
 
   // Change color when hit
   this.change = function(_type1) {
-     /* if(this.r < 30){
-    this.r++;
-      }*/
-      this.col = color(255, 0, 0);
+     if(_type1 == "EaWa"){ //particle 1 is earth, particle 2 is fire
+         if(this.r < 30){
+             this.r++; //grows earth particle
+         }
+     }
+     if(_type1 == "EaFi"){ //particle 1 is earth, particle 2 is fire
+         this.col = color(235, 173, 86); //changes earth particle to fire color
+      }
+      if(_type1 == "FiWa"){ //particle 1 is fire, particle 2 is water
+       if(this.r >= 0){ //shrinks fire particle
+           this.r = .5;
+      }
+          //this.col = color(255, 0, 0);
+  }
   }
  
   this.changeOther = function(_type2){
-      this.col = color(0, 0, 0);
+      if(_type2 == "WaEa"){ //particle 1 is water, particle 2 is earth)
+           if(this.r < 30){
+             this.r++; //grows earth particle
+         }
+      }
+      if(_type2 == "FiEa"){ //particle 1 is fire, particle 2 is earth
+       this.col = color(235, 173, 86);   
+      }
+      
+      if(_type2 == "WaFi"){ //particle 1 is water, particle 2 is fire
+           if(this.r >= 0){ //shrinks fire particle
+           this.r = .5;
+      }
+      }
+      //this.col = color(0, 0, 0);
   }
   
   this.getRelationship = function(_type1, _type2){
@@ -57,34 +81,24 @@ function Particle(x,y,r, _color, type) {
       //water = 2;
       //fire = 3; 
       if(_type1 == 1 && _type2 == 2){ //earth & water
-          
-          
+          this.type = "EaWa";
       }
       if(_type1 == 2 && _type2 == 1){ //water & earth
-          
-          
+          this.type = "WaEa";
       }
       if(_type1 == 2 && _type2 == 3){ //water & fire
-          
-          
+          this.type = "WaFi";
       }
       if(_type1 == 3 && _type2 == 2){ //fire & water
-          
-          
+          this.type = "FiWa";    
       }
-      
       if(_type1 == 1 && _type2 == 3){ //earth & fire
-          
-          
+          this.type = "EaFi";  
       }
-      
       if(_type1 == 3 && _type2 == 2){ //fire & water
-          
-          
+          this.type = "FiWa"; 
       }
-      
-      return this.type;
-      
+      return this.type; 
   }
   
   this.getType = function(){

@@ -18,11 +18,14 @@ function CustomListener() {
     // Get our objects that reference these bodies
     var o1 = b1.GetUserData();
     var o2 = b2.GetUserData();
-
+    var relation; 
+      
     if (o1 instanceof Particle && o2 instanceof Particle) {
       o1.change(o1.getType());
       o2.changeOther(o2.getType());
-      //o1.getRelationship(o1.getType(), o2.getType());
+      relation = o1.getRelationship(o1.getType(), o2.getType());
+      o1.change(relation);
+      o2.changeOther(relation);
         
         console.log("O1" + o1.getType());
         console.log("O2" + o2.getType());

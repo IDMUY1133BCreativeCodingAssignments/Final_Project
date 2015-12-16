@@ -122,7 +122,7 @@ function setup(){
 
     world.SetContactListener(new CustomListener());
 
-    wall = new Boundary(width/2, height-20, width, 10);
+    wall = new Boundary(width/2, height-(height/2), width, 10);
     earthSound.setVolume(2); //will this make it louder?
     //the colors that you can choose from
     setColors();
@@ -267,6 +267,7 @@ function floPressed(){
 }
 
 function exPressed(){
+    //delete everything on experimental room screen everytime this is pressed 
     flowerPressed = false;
     flamesPressed = false;
     balloonPressed = false;
