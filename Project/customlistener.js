@@ -21,14 +21,17 @@ function CustomListener() {
     var relation; 
       
     if (o1 instanceof Particle && o2 instanceof Particle) {
-      o1.change(o1.getType());
-      o2.changeOther(o2.getType());
+      //o1.change(o1.getType());
+      //o2.changeOther(o2.getType());
+        console.log("O1 " + o1.getType());
+        console.log("O2 " + o2.getType());
+        
       relation = o1.getRelationship(o1.getType(), o2.getType());
+        //not getting anything from relation? 
+        
+        console.log("Relation" + relation);
       o1.change(relation);
       o2.changeOther(relation);
-        
-        console.log("O1" + o1.getType());
-        console.log("O2" + o2.getType());
         //ok so o1.getType and o2.gettype work!! 
     }
   }

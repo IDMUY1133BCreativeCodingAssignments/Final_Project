@@ -48,9 +48,10 @@ function Particle(x,y,r, _color, type) {
      if(_type1 == "EaFi"){ //particle 1 is earth, particle 2 is fire
          this.col = color(235, 173, 86); //changes earth particle to fire color
       }
+      
       if(_type1 == "FiWa"){ //particle 1 is fire, particle 2 is water
        if(this.r >= 0){ //shrinks fire particle
-           this.r = .5;
+           this.r = this.r - 1;
       }
           //this.col = color(255, 0, 0);
   }
@@ -68,42 +69,42 @@ function Particle(x,y,r, _color, type) {
       
       if(_type2 == "WaFi"){ //particle 1 is water, particle 2 is fire
            if(this.r >= 0){ //shrinks fire particle
-           this.r = .5;
+           this.r = this.r - 1;
       }
       }
       //this.col = color(0, 0, 0);
   }
   
   this.getRelationship = function(_type1, _type2){
-    this.type = "NA";
+    this.relation = "NA";
       //air = 0;
       //earth = 1;
       //water = 2;
       //fire = 3; 
+      
       if(_type1 == 1 && _type2 == 2){ //earth & water
-          this.type = "EaWa";
+          this.relation = "EaWa";
       }
-      if(_type1 == 2 && _type2 == 1){ //water & earth
-          this.type = "WaEa";
+      else if(_type1 == 2 && _type2 == 1){ //water & earth
+          this.relation = "WaEa";
       }
-      if(_type1 == 2 && _type2 == 3){ //water & fire
-          this.type = "WaFi";
+      else if(_type1 == 2 && _type2 == 3){ //water & fire
+          this.relation = "WaFi";
       }
-      if(_type1 == 3 && _type2 == 2){ //fire & water
-          this.type = "FiWa";    
+      else if(_type1 == 3 && _type2 == 2){ //fire & water
+          this.relation = "FiWa";    
       }
-      if(_type1 == 1 && _type2 == 3){ //earth & fire
-          this.type = "EaFi";  
+      else if(_type1 == 1 && _type2 == 3){ //earth & fire
+          this.relation = "EaFi";  
       }
-      if(_type1 == 3 && _type2 == 2){ //fire & water
-          this.type = "FiWa"; 
+      else if(_type1 == 3 && _type2 == 2){ //fire & water
+          this.relation = "FiWa"; 
       }
-      return this.type; 
+      return this.relation; 
   }
   
   this.getType = function(){
       console.log("Returning type!!!");
-      console.log(this.type);
    return this.type;   
   }
   // This function removes the particle from the box2d world
