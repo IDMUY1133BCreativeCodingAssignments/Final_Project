@@ -6,10 +6,11 @@ var b1,b2,b3,b4,b5;
 var clouds;
 var enemies;
 var score=0;
-var userImg,enemyImg,cloudsImg;
+var userImg,enemyImg,cloudsImg,balloonsImg;
 var gameover;
 var birdrate=100;
 var points=0;
+var ballooncolors;
 
 
 function setup(){
@@ -17,26 +18,48 @@ function setup(){
     
     userImg=loadImage("data/balloons-36236_960_720.png");
     enemyImg=loadImage("data/9cprBLgcE.png");
-    cloudsImg=loadImage("data/bg.png");
+    cloudsImg=loadImage("data/cloud.png");
+    balloonsImg=loadImage("data/balloons.png");
     
     user=createSprite(width/2,500,50,50); //USER SPRITE
 //    user.addImage(userImg);
     user.shapeColor=color(255);
     user.velocity.y=-6;// the rate of user going up
     
-    userballoons = new Group();
+    ballooncolors={b1:color(139,94,178,200),
+                   b2:color(49,131,255,200),
+                   b3:color(225,255,84),
+                   b4:color(255,100,59,200),
+                   b5:color(82,255,97,200)}
     
+    userballoons = new Group();
     b1 = createSprite(user.position.x-30,user.position.y-100,30,30);
+    b1.addImage(balloonsImg);
+    tint(139,94,178,200);
     userballoons.add(b1);
+    //noTint();
     b2 = createSprite(user.position.x,user.position.y-100,30,30);
+    b2.addImage(balloonsImg);
+    tint(49,131,255,200);
     userballoons.add(b2);
+    //noTint()
     b3 = createSprite(user.position.x+30,user.position.y-100,30,30);
+    b3.addImage(balloonsImg);
+    tint(225,255,84);
     userballoons.add(b3);
+    //noTint();
     b4 = createSprite(user.position.x-15,user.position.y-115,30,30);
+    b4.addImage(balloonsImg);
+    tint(255,100,59,200);
     userballoons.add(b4);
+    //noTint();
     b5 = createSprite(user.position.x+15,user.position.y-115,30,30);
+    b5.addImage(balloonsImg);
+    tint(82,255,97,200);
     userballoons.add(b5);
-    userballoons.shapeColor=color(255);//random colors for each balloon
+    //noTint();
+    //userballoons.addImage(balloonsImg);
+    //userballoons.shapeColor=color(255);//random colors for each balloon
     
     for (i=0;i<userballoons.length;i++){
         userballoons[i].velocity.y=-6;//same rate as the user
@@ -93,7 +116,8 @@ function draw(){
 //        }
         if (frameCount%50===0){
             var cloud=createSprite(random(width),user.position.y-height,100,50);
-            cloud.shapeColor=color(255,150);
+            cloud.addImage(cloudsImg);
+            //cloud.shapeColor=color(255,150);
             clouds.add(cloud);
         }
         
@@ -110,15 +134,25 @@ function draw(){
         if(frameCount%5===0){
             points+=1;
         }
-        if (points<50){//possible leveling of birds
-            birdrate=85;
+        if (points%50!=0){
+            var onetimeonly=true;
         }
-        else if(points<100){
-            birdrate=100;
+        if (points%50===0 && point!=0 && onetimeonly){//possible leveling of birds
+            birdrate-=10
+            onetimeonly=false;
+            console.log('HEY');
         }
-        else if(points<150){
-            birdrate=200;
-        }
+        console.log(onetimeonly);
+        console.log(birdrate);
+//        else if(points<100){
+//            birdrate=90;}
+//        else if(points<150){
+//            birdrate=80;}
+//        else if(points<200){
+//            birdrate=}
+//        else if(point<250){}
+//        else if(points<300){}
+//        else if (points<250){}
         for (var i = 0; i<enemies.length;i++){//deleting enemies that have passed
             if(enemies[i].position.y>height+25){
                 enemies[i].remove();
@@ -133,7 +167,6 @@ function draw(){
     
     //console.log(user.position.y);
     camera.position.y=user.position.y-190;
-    
 //    if (camera.position.y<sky.position.y-sky.height+height/2){
 //        sky.position.y=-sky.height;
 //    }//vert scroll
@@ -142,19 +175,30 @@ function draw(){
     
     enemies.bounce(userballoons,birdHit);
     
+    noTint();
     drawSprites(clouds);
     drawSprites(enemies);
     drawSprite(user);
 //    drawSprite(sky);
-    drawSprites(userballoons);
+    for (i=0;i<userballoons.length;i++){
+        //tint(ballooncolors[]);
+        drawSprite(userballoons[i]);
+    }
+//    tint(random(255),random(255),random(255),200);
+    //drawSprites(userballoons);
     
+    noStroke();//ground floor
+    fill(122,232,94);
+    rect(0,525,width,100);
+    
+    fill(0);
+    textSize(36);
+    textAlign(CENTER);
+    text(str(points),width/2,user.position.y-400);
+
 
 }//close draw
 
-function die(){
-    updateSprites(false);
-    gameOver=true;
-}
 
 function newGame() {
     enemies.removeSprites();
