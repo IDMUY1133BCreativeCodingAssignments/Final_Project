@@ -1,13 +1,49 @@
+
+/* I want to create a timeline of November 13,2015 to Nov 15,2015
+comparing tweets of #prayforparis vs #prayforjapan #prayforbeirut 
+i want a clock at the top running with date and time at a sped up speed
+as time goes on tweets are popping up accordingly
+*/
+
+/* tweets are accessed through temboo to twitter api*/
+/* digital clock comes from http://www.openprocessing.org/sketch/16037 */
+
+
 import com.temboo.core.*;
-import com.temboo.Library.Twitter.Search.Tweets.*;
+import com.temboo.Library.Twitter.Search.*;
 
 // Create a session using your Temboo account application details
 TembooSession session = new TembooSession("ijweaver", "myFirstApp", "2a946e977f9a4b79b3cd6fcae6001d2d");
 
+//declare clock
+DigitalClock digitalClock;
+
 void setup() {
+  //background
+  size(1000,800);
+  // intialize clock
+  digitalClock = new DigitalClock(40, width/2, width/10);
   // Run the Tweets Choreo function
   runTweetsChoreo();
 }
+
+ 
+
+ 
+void draw() {
+  //background(204);
+  background(0);
+  
+  //displaying clock
+  digitalClock.getTime();
+  digitalClock.display();
+  
+  //displaying timeline
+  stroke(255);
+  strokeWeight(5);
+  line(100,400,900,400);
+}
+ 
 
 void runTweetsChoreo() {
   // Create the Choreo object using your Temboo session
@@ -30,5 +66,4 @@ void runTweetsChoreo() {
   println(tweetsResults.getLimit());
   println(tweetsResults.getRemaining());
   println(tweetsResults.getReset());
-
 }
