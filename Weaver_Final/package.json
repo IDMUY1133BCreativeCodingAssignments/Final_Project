@@ -1,0 +1,15 @@
+{
+  "name": "twitter_paris",
+  "version": "1.0.0",
+  "description": "searching twitter api for terms to visualize",
+  "main": "bot.js",
+  "dependencies": {
+    "twit": "^2.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bella Weaver",
+  "license": "ISC"
+}
