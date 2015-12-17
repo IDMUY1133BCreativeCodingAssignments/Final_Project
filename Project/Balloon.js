@@ -1,4 +1,4 @@
-function Balloon(){
+function Balloon(){ //constructor
     this.ballLocX = windowWidth/2;
     this.ballLocY = windowHeight/2;
     this.translateY = 10;
@@ -7,34 +7,32 @@ function Balloon(){
 
 Balloon.prototype.breathe = function(){
     
-    if(this.run == 1){ //prevents fourSecond, sevenSecond, and eightSecond from constantly updating
+    if(this.run == 1){ 
     this.milliseconds = millis();  
     this.fourSecond = this.milliseconds + 4000;
     this.sevenSecond = this.fourSecond + 7000;
     this.eightSecond = this.sevenSecond + 8000;
-    this.run = 2;
+    this.run = 2; //prevents fourSecond, sevenSecond, and eightSecond from constantly updating
     }
     
     if(millis()<this.fourSecond){
-        this.translateY = this.translateY - 1;    
+        this.translateY = this.translateY - 1;  //balloon rises 
     }
     else if(millis() < this.sevenSecond){
-        this.translateY = this.translateY - random(-.5, .5);
+        this.translateY = this.translateY - random(-.5, .5); //lets balloon "hover" rather than staying the same
     }
    else if(millis() < this.eightSecond){
-        this.translateY = this.translateY + .5;
+        this.translateY = this.translateY + .5; //balloon goes back down
     }  
      else if(millis() > this.eightSecond){
         this.milliseconds = millis();
         this.fourSecond = this.milliseconds + 4000;
         this.sevenSecond = this.fourSecond + 7000;
         this.eightSecond = this.sevenSecond + 8000; 
-     //runAgain(); 
     }
-    console.log(this.translateY);
 }
 
-Balloon.prototype.breatheDisplay = function(colorFill){
+Balloon.prototype.breatheDisplay = function(colorFill){ //accepts color of balloon as parameter
     background(158, 212, 255);
     push();
     fill(0);
@@ -52,16 +50,7 @@ Balloon.prototype.breatheDisplay = function(colorFill){
     ellipse(this.ballLocX, this.ballLocY, 60, 65);    
     pop();
 }
-
-Balloon.prototype.playSong = function(song){
-    song.play();
-    song.loop();
-}
-
-Balloon.prototype.stopSong = function(song){
-    song.stop();
-}
-Balloon.prototype.reset = function(song){
+Balloon.prototype.reset = function(){ //normalizes all values if button is pressed again
     this.ballLocX = windowWidth/2;
     this.ballLocY = windowHeight/2;
     this.translateY = 10;

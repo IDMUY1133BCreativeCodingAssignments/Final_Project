@@ -1,28 +1,23 @@
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
-
-// A circular particle
+// http://natureofcode.com for help
 
 // Constructor
 function Particle(x,y,r, _color, type) {
-  this.r = r;
+  this.r = r; //assigns initial values of particle 
   this.col = _color;
   this.type = type;
 
   // Define a body
-  var bd = new box2d.b2BodyDef();
-  bd.type = box2d.b2BodyType.b2_dynamicBody;
-  bd.position = scaleToWorld(x,y);
+  var bd = new box2d.b2BodyDef(); //defines a new body - which is like a soul w/ no human form (it needs a shape) 
+  bd.type = box2d.b2BodyType.b2_dynamicBody; //a dynamic body moves around the world, collides with body, and responsds to forces 
+  bd.position = scaleToWorld(x,y); //fits body in world
 
   // Define a fixture
-  var fd = new box2d.b2FixtureDef();
+  var fd = new box2d.b2FixtureDef(); //fixture has properties
   // Fixture holds shape
   fd.shape = new box2d.b2CircleShape();
   fd.shape.m_radius = scaleToWorld(this.r);
   
-  // Some physics
-  fd.density = 1.0;
+  fd.density = 1.0; //properties for fixture
   fd.friction = 0.1;
   fd.restitution = 0.3;
  
@@ -32,7 +27,7 @@ function Particle(x,y,r, _color, type) {
   this.body.CreateFixture(fd);
 
   // Some additional stuff
-  this.body.SetLinearVelocity(new box2d.b2Vec2(random(-5, 5), random(2, 5)));
+  this.body.SetLinearVelocity(new box2d.b2Vec2(random(-5, 5), random(2, 5))); //all particles besides air get linear velocity and angular velocity set here
   this.body.SetAngularVelocity(random(-5,5));
 
     this.body.SetUserData(this);
@@ -50,17 +45,17 @@ function Particle(x,y,r, _color, type) {
       }
       
       if(_type1 == "FiWa"){ //particle 1 is fire, particle 2 is water
-       if(this.r >= 0){ //shrinks fire particle
+       if(this.r >= 3){ //shrinks fire particle
            this.r = this.r - 1;
       }
-          if(this.r <= 1){   
-              this.col = color(160);
-           this.type = 4; //"ashes" after it reaches certain size
+          if(this.r < 3){   
+           this.col = color(160, 160, 160);
+           this.type = 4; //"ashes" after it reaches certain sizes, isn't affected directly by anything
        }
       }
       if(_type1 == "Air"){
-          this.body.SetAngularVelocity(random(-100, 100));
-          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-20, 20) , random(-20, 20)));
+          this.body.SetAngularVelocity(random(-20, -20)); //seting velocities for air particles
+          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-10, 10) , random(-10, 10)));
       } 
           //this.col = color(255, 0, 0);
   }
@@ -77,23 +72,22 @@ function Particle(x,y,r, _color, type) {
       }
       
       if(_type2 == "WaFi"){ //particle 1 is water, particle 2 is fire
-           if(this.r >= 0){ //shrinks fire particle
-           this.r = this.r - 1;
+           if(this.r >= 3){ 
+           this.r = this.r - 1; //shrinks fire particle
       }
-       if(this.r <= 1){   
-        this.col = color(160);
-           this.type = 4; //"ashes"
+       if(this.r < 3){   
+        this.col = color(160, 160, 160); //becomes "ashes"
+           this.type = 4; //ashes doesn't fall under any of the elements
        }
       }
       if(_type2 == "Air"){
-          this.body.SetAngularVelocity(random(-100, 100));
-          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-20, 20) , random(-20, 20)));
+          this.body.SetAngularVelocity(random(-20, 20)); //setting velocities for air particles
+          this.body.SetLinearVelocity(new box2d.b2Vec2(random(-10, 10) , random(-10, 10)));
       }
-      //this.col = color(0, 0, 0);
   }
   
   this.getRelationship = function(_type1, _type2){
-    this.relation = "NA";
+    this.relation = "NA"; //default relation
       if(_type1 == 1 && _type2 == 2){ //earth & water
           this.relation = "EaWa";
       }
@@ -112,15 +106,14 @@ function Particle(x,y,r, _color, type) {
       else if(_type1 == 3 && _type2 == 1){ //fire & earth
           this.relation = "FiEa"; 
       }
-      else if(_type1 == 0 || _type2 ==0){
+      else if(_type1 == 0 || _type2 ==0){ //air doesn't have specific relationships, just flies around
           this.relation = "Air";   
       }
-      return this.relation; 
+      return this.relation; //returns the relationship for the customlistener to know what to do
   }
   
   this.getType = function(){
-      console.log("Returning type!!!");
-   return this.type;   
+   return this.type; //gets type for use in customlistener.js to get relationships
   }
   // This function removes the particle from the box2d world
   this.killBody = function() {
@@ -134,9 +127,9 @@ function Particle(x,y,r, _color, type) {
     // Is it off the bottom of the screen?
     if (pos.y > height+this.r*2) {
       this.killBody();
-      return true;
+      return true; //if it falls through, kill the body and return true
     }
-    return false;
+    return false; //if it's not done, then it's false 
   }
 
   // Drawing the box
@@ -145,32 +138,25 @@ function Particle(x,y,r, _color, type) {
     var pos = scaleToPixels(this.body.GetPosition());
     // Get its angle of rotation
     var a = this.body.GetAngleRadians();
-    
     // Draw it!
     rectMode(CENTER);
     push();
     translate(pos.x,pos.y);
-    rotate(a);
-    fill(this.col);
+    rotate(a); //important with air
+    fill(this.col); 
     stroke(0, 70);
     strokeWeight(2);
-    //var which = int(random(0, 1));
-    //switch(which){
-      //  case 0:
-      if(this.type == 1 || this.type == 3){
+      if(this.type == 1 || this.type == 3){ //if it's earth or fire, make a rectangle
         rect(0, 0, this.r*2, this.r*2);
       }
-      if(this.type == 0 || this.type == 2){
+      if(this.type == 0 || this.type == 2){ //if it's water or air, make a circle!! 
         ellipse(0, 0, this.r*2, this.r*2);
-   //         break;
-     //   case 1:
-       // rect(0, 0, this.r*2,this.r*2);
-         //break;
-    // Let's add a line so we can see the rotation
   }
   pop();
   }
+  /* was trying to get particles to go away - the array would be empty, but the "skeletons" would be left behind
   this.remove = function(){
-      this.killBody();
+      this.killBody(); 
 }
+*/
 }

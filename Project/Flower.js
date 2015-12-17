@@ -1,4 +1,4 @@
-function Flower(){
+function Flower(){ //constructor
     this.floLocX = windowWidth/2;
     this.floLocY = windowHeight/2;
     this.run = 1;
@@ -12,22 +12,18 @@ Flower.prototype.breathe = function(bckgFill, colorFill){
     this.fourSecond = this.milliseconds + 4000;
     this.sevenSecond = this.fourSecond + 7000;
     this.eightSecond = this.sevenSecond + 8000;
-    this.run = 2;
+    this.run = 2; //prevents seconds from constantly updating
     }
     fill(colorFill, 150);
     noStroke();
-    console.log("Four" + this.fourSecond);
-    console.log("Seven" + this.sevenSecond);
-    console.log("Eight" + this.eightSecond);
-    translate(this.floLocX, this.floLocY);
+    translate(this.floLocX, this.floLocY); //makes sure it rotates around middle, not origin
      if(millis()< this.fourSecond){
         rotate(PI/3);
-        ellipse(0, 30, 20, 80);
+        ellipse(0, 30, 20, 80); //adds two petals per time intervals
         rotate(PI/3);
         ellipse(0, 30, 20, 80);
     }
     else if(millis() < this.sevenSecond){
-        console.log("Changed");
         rotate(PI);
         ellipse(0, 30, 20, 80);
         rotate(PI);
@@ -55,25 +51,7 @@ Flower.prototype.breatheDisplay = function(colorFill){
     ellipse(this.floLocX, this.floLocY, 20, 20);
     pop();
 }
-
-Flower.prototype.action = function(){
-    
-    
-}
-Flower.prototype.actionDisplay = function(){
-    
-    
-}
-
-Flower.prototype.playSong = function(song){
-    song.play();
-    song.loop();
-}
-
-Flower.prototype.stopSong = function(song){
-    song.stop();
-}
-Flower.prototype.reset = function(){
+Flower.prototype.reset = function(){ //normalizes values when buttons pressed
    this.floLocX = windowWidth/2;
     this.floLocY = windowHeight/2;
     this.run = 1; 

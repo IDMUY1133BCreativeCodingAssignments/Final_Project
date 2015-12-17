@@ -1,67 +1,11 @@
-//galaxy builder: http://29a.ch/sandbox/2011/neonflames/# for inspo
-//the person also put up a github of his code for that ^ look at it for help
-// give person the option of adding little stars too:http://billsnyderastrophotography.com/wp-content/uploads/2012/10/M31-Andromeda-Galaxy_color-from-Martin-Resize.jpg 
-
-//luminescent stars and stuff
-//when they press down the mouse different bits of music play (but only when they press)  
-//work on drawing when the person clicks 
-//let them draw their own constellations? :http://p5js.org/examples/demos/Hello_P5_Drawing.php 
-//http://zenbullets.com/book.php 
-
-// 4 7 8 breathing
-
-//GOAL: GET BRUSHSTROKES TO COME OUT WHEN MOUSE PRESSED 
-
-//part space maker part relaxation space 
-//Relaxation Space Maker ?
-
-//http://p5play.molleindustria.org/examples/index.html?fileName=collisions4.js 
-//a sound section: every time a thing bounces it makes a sound? 
-
-//https://processing.org/examples/tree.html <- use for earth?
-
-//toggle timer!!!
-
-//consider  making multiple of all the objects on breathing part 
-
-//look at tickle p5.js example for mouseOver help 
-
-//user can pluck petals/do stuff with flower once it is done loading maybe? (or incorporate that into the building mode) 
-
-//http://thisissand.com INSPO
-//http://www.likethisforever.com
-//http://www.ferryhalim.com/orisinal/g3/bells.htm 
-//rafael rozendaal inspiration for all the weird little things 
-
-//okay for the generative drawing part
-//maybe just have particles look identical, but their velocity and acceleration is based on the type they are 
-//things left to do
-
-//set up circles that when user hovers over them, and clicks, it changes the color to that 
-//construct four different particle systems
-//when particles from them interact, things change 
-//one additional class? or two?
-
-//or come up with something completely different (like this thissand.com thing) 
-
-//pop bubbles by clicking, pluck petals, blow out candles, use sound to pop balloons!!! 
-
-//DANG SON I HOPE THIS ALL WORKS BECAUSE THIS ALL SUCKS EXTREME BUTTS
-//figure out: 
-
-//how to make bubbles and balloons float up (make new classes for them?) 
-//get candles to respond to breath, if possible?
-//PLUCKING PETALS WILL PROBABLY B HARDEST
-
-
 // A reference to our box2d world
 var world;
-
+var test = 1;
 
 // A list for all of our particles
 var particles = [];
 
-var wall;
+var wall; //our boundary
 
 var red; //global variable for maximum scope of colors 
 var orange;
@@ -87,7 +31,6 @@ var flower;
 var bubbles;
 var flames; 
 var experiment; 
-var button;
 
 //var bubbLocY = windowHeight/2; //deleting this makes the program fail, why ? 
 
@@ -97,6 +40,7 @@ var airSound;
 var waterSound;
 var earthSound;
 var bubbleSound;
+var silence;
 
 var balloonPressed = false;
 var flowerPressed = false;
@@ -114,81 +58,75 @@ function preload(){ //preload the sounds used in the file
     airSound = loadSound("sounds/wind-chimes.mp3");
     earthSound = loadSound("sounds/rustle.mp3");
     waterSound = loadSound("sounds/rain.mp3");   
-    bubbleSound = loadSound("sounds/bubble.mp3");
+    silence = loadSound("sounds/5min.mp3");
 }
     
 function setup(){
     createCanvas(windowWidth, windowHeight);
-    background(255);
-    world = createWorld();
+    background(146, 225, 171);
+    world = createWorld(); //generates world w/ gravity, etc. for which everything takes place
 
-    world.SetContactListener(new CustomListener());
+    world.SetContactListener(new CustomListener()); //"listening" for collisions
 
-    wall = new Boundary(width/2, height-(height/2), width, 20);
-    earthSound.setVolume(2); //will this make it louder?
-    //the colors that you can choose from
-    setColors();
-    makeButtons();
-    welcomeText();
-    testBubble = new Bubble();
+    wall = new Boundary(width/2, height-50, width, 20);
+    setColors(); //the colors that you can choose from
+    makeButtons(); //makes the buttons
+    welcomeText(); //makes the text you see at the beginning
+    testBubble = new Bubble(); //makes objects for each different breathing button
     testFlower = new Flower();
     testCandle = new Candle();
     testBalloon = new Balloon();
     
-    particleColor = black;
+    particleColor = black; //same color as the background of the experimental room so particle doesn't show
 }
 
 function draw(){    
     if(balloonPressed){ 
-        testBalloon.breathe();
-        testBalloon.breatheDisplay(red);
+        testBalloon.breathe(); //does the "work"
+        testBalloon.breatheDisplay(red); //displays the work 
         displaySeconds(); 
-
     }
     if(flowerPressed){
-        testFlower.breathe(mint, red);
-        testFlower.breatheDisplay(yellow);
+        testFlower.breathe(mint, red); //bckgFill, colorFill (of petals)
+        testFlower.breatheDisplay(yellow); //color of middle
         displaySeconds(); 
-
     }
     if(flamesPressed){
-        testCandle.breathe();
-        testCandle.breatheDisplay(yellow, red);
+        testCandle.breathe(); //changing of color happens in breathe function itself
+        testCandle.breatheDisplay(yellow); //color of flame
         displaySeconds(); 
-
     }
     if(bubblesPressed){
         testBubble.breathe();
-        testBubble.breatheDisplay(blue, lightblue);
+        testBubble.breatheDisplay(blue, lightblue); //bckgFill, colorFill
         displaySeconds(); 
-
     }
-    if(expPressed){ //get rid of all the particles when you leave ? 
-        // We must always step through time!
-        background(0);
+    if(expPressed){ 
+        if(test == 1){ //checks if BACKSPACE has been pressed
+            background(0);
+        }
+        else{
+        }
         push();
         fill(255);
         textSize(15);
-        text(" Left Arrow: Air \n Right Arrow: Earth \n Up Arrow: Water \n Down Arrow: Fire \nBackspace to clear the screen!", 15, 40);
+        text(" Left Arrow: Air \n Right Arrow: Earth \n Up Arrow: Water \n Down Arrow: Fire \n Backspace for drawing!", 15, 80);
         pop();
-        var timeStep = 1.0/30;
-        // 2nd and 3rd arguments are velocity and position iterations
-        world.Step(timeStep,10,10);
+        var timeStep = 1.0/30; //stepping through time!
+        world.Step(timeStep,10,10); // 2nd and 3rd arguments are velocity and position iterations
         if(mouseIsPressed){
-             var sz = random(4, 8);
-             particles.push(new Particle(mouseX, mouseY, sz, particleColor, type));  
+             var sz = random(3, 10); //size varies from 3 to 10
+             particles.push(new Particle(mouseX, mouseY, sz, particleColor, type)); //generates particles if mouse is pressed 
          }
          for (var i = particles.length-1; i >= 0; i--) {
-        particles[i].display();
+        particles[i].display(); //shows particles
         if (particles[i].done()) {
-            particles.splice(i,1);
+            particles.splice(i,1); //removes particles from array
                 }
          }
-        wall.display();
-        hideSeconds();
+        wall.display(); //shows boundary
+        hideSeconds(); //timer unnecessary in experimental room
     } //end of expPressed
-        //displaySeconds(); 
-
 }
 
 function setColors(){ //defines all the colors needed for program 
@@ -209,27 +147,28 @@ function setColors(){ //defines all the colors needed for program
 }
 
 function makeButtons(){ //creates the buttons needed for the program 
-    balloon = createButton('balloon');
-    balloon.position(windowWidth/5, 0);
-    balloon.mousePressed(baPressed);
+    balloon = createButton('balloon'); //name of button 
+    balloon.position(70, 20); //position of button
+    balloon.mousePressed(baPressed); //parameter is function taken when button is pressed
     flower = createButton('flower');
-    flower.position(windowWidth/4, 0);
+    flower.position(130, 20);
     flower.mousePressed(floPressed);
-    bubbles = createButton('bubbles');
-    bubbles.position(windowWidth/3, 0);
+    bubbles = createButton('bubble');
+    bubbles.position(190, 20);
     bubbles.mousePressed(buPressed);
     flames = createButton('flames');
-    flames.position(windowWidth/2, 0);
+    flames.position(250, 20);
     flames.mousePressed(fPressed);
     experiment = createButton('Experimental Room'); 
-    experiment.position(50, 0);
-    experiment.mousePressed(exPressed); //call thing that makes the objects ? or just make boolean true like it is righ tnow 
+    experiment.position(310, 20);
+    experiment.mousePressed(exPressed); //call thing that makes the objects ? or just make boolean true like it is right now 
 }
 
 /** preliminary text user sees upon beginning thing**/ 
 
 function welcomeText(){ 
-    textSize(16);
+    textSize(16); //sets size of font
+    textFont("Georgia"); //sets font
     text("Welcome to the relaxation space! \nYou can either practice meditative breathing or go to the experimental room to manipulate the elements. \nA couple notes before you begin: ", 0, windowHeight/2);
     
     text("The meditative breathing follows this pattern. \nBreathe in for 4 seconds, hold your breath for 7, and exhale for 8. \nEach room should guide you through this process. \nDo this as many times as you like until you feel calm.", 0, windowHeight/2 + 80); 
@@ -244,12 +183,9 @@ it also restarts all the values
 */
 
 function baPressed(){
-    testBalloon.reset();
-    //adjustSong(airSound);
-    stopOthers(airSound);
-    //translateY = 10;
-    //run = 1;
-    balloonPressed = true;
+    testBalloon.reset(); //resets everytime button is pressed
+    stopOthers(airSound); //will stop all the songs but then play the given parameter
+    balloonPressed = true; //these statements prevent the other buttons from running
     bubblesPressed = false;
     flamesPressed = false;
     flowerPressed = false;
@@ -288,7 +224,7 @@ function floPressed(){
 }
 
 function exPressed(){
-    //delete everything on experimental room screen everytime this is pressed 
+    stopOthers(silence);
     flowerPressed = false;
     flamesPressed = false;
     balloonPressed = false;
@@ -297,15 +233,15 @@ function exPressed(){
 }
 
 function stopOthers(keep){
-    airSound.stop();
+    airSound.stop(); //stops all other sounds 
     fireSound.stop();
     waterSound.stop();
     earthSound.stop();
-    bubbleSound.stop();
-    keep.play();
+    silence.stop();
+    keep.play(); //will play the parameter song
     
 }
-function displaySeconds(){ //shows timer for guidance 
+function displaySeconds(){ //shows timer for breathing guidance 
     push();
     fill(255);
     rect(0, 0, 55, 55);
@@ -315,7 +251,7 @@ function displaySeconds(){ //shows timer for guidance
     pop();
 }
 
-function hideSeconds(){
+function hideSeconds(){ //gets rid of timer during experimental part
     push();
     fill(0);
     noStroke();
@@ -324,33 +260,37 @@ function hideSeconds(){
 }
 
 function keyPressed(){ //changes colors of particles in experimental room 
-   if(keyCode == LEFT_ARROW){
+   if(keyCode == LEFT_ARROW){ //if left arrow pressed, air particles come out
         particleColor = white;
         type = 0;
     }
     
-    if(keyCode == RIGHT_ARROW){
+    if(keyCode == RIGHT_ARROW){ //if right arrow pressed, earth particles come out
         particleColor = greenEx;
         type = 1; 
     }
     
-    if(keyCode == UP_ARROW){
+    if(keyCode == UP_ARROW){ //if up arrow pressed, water particles come out
         particleColor = blueEx;
         type = 2;
     }
     
-    if(keyCode == DOWN_ARROW){
+    if(keyCode == DOWN_ARROW){ //if down arrow pressed, fire particles comes out
         particleColor = orangeEx;
-        type = 3;
+        type = 3; 
     }
     
+    if(keyCode == BACKSPACE){
+        test = 2; //activates drawing mode 
+    }
+    
+       /* was previously trying to get particles disappear
     if(keyCode == BACKSPACE){
         for (var i = particles.length-1; i >= 0; i--) {
             particles[i].remove();
         //fill(160); trying to make particles disaPPEAR 
         //rect(40, 40, windowWidth/2, windowHeight/2 - 2);
     }
-      
-    }
+    */
 }
 
