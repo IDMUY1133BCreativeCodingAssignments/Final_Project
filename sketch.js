@@ -1,3 +1,16 @@
+//Sharon Lee Final Project
+
+//REFERENCES USED:
+//http://p5play.molleindustria.org/examples/index.html?fileName=sprite3.js
+//http://p5play.molleindustria.org/examples/index.html?fileName=breakout.js
+//http://p5play.molleindustria.org/examples/index.html?fileName=flappyBird.js
+//http://p5play.molleindustria.org/docs/index.html
+//http://p5js.org/reference/
+
+//original sprite images inspired by...
+//https://40.media.tumblr.com/d85caf6012eea80bd824acaf42cba3b0/tumblr_nf6oryfVDy1rmg39ko1_500.png
+//http://www.clipartbest.com/cliparts/9cp/rBL/9cprBLgcE.png
+
 var pos = 10;
 var user;
 var userballoons;
@@ -98,7 +111,7 @@ function draw(){
             enemy.addImage("makeAmericaGreatAgain",trumpImg);//secret
             enemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");//bird anim
             if (trump){
-                enemy.changeAnimation("makeAmericaGreatAgain");
+                enemy.changeAnimation("makeAmericaGreatAgain");//if t is pressed birdie goes to trump
             }
             else{
             enemy.changeAnimation("flying");
@@ -165,6 +178,13 @@ function draw(){
     fill(255);
     textSize(28);
     text("PRESS ENTER TO START",width/2,height-50);//enter to start info
+    
+    if (!unpaused){
+        fill(0);
+        textSize(18);
+        textAlign(CENTER);
+        text("PAUSED",width/2,user.position.y-100);
+    }
     
     if (keyWentDown(32)||keyWentDown(80)){//actual pause function
         if (unpaused){//PAUSE
@@ -241,7 +261,7 @@ function birdHit(enemy,userballoons){//if two collide, balloon pops, enemy disap
     enemy.remove();
     fakeEnemy=createSprite(enemyX,enemyY);//"enemy" flying away, though technically removed from sprite group
     if (trump){
-        fakeEnemy.addImage("makeAmericaGreatAgain", trumpImg);
+        fakeEnemy.addImage("makeAmericaGreatAgain", trumpImg);//secret
     }
     else{
     fakeEnemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");}
