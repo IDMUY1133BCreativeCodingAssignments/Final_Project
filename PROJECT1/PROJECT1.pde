@@ -216,7 +216,7 @@ void loseLives() {
 
 void body() {
   pushMatrix();
-  scale(scale);
+  //scale(scale);
   translate(random(-8, 8), 0);
   translate(200, 200);
   //fill(250, 0, 60);
@@ -281,8 +281,8 @@ void body() {
    eye2.update(spiderRandomX, spiderRandomY);
    eye1.display();
    eye2.display();
-   */
-
+   
+*/
 
   human1x = 140 + xx;
   human1y = 310 + yy;
