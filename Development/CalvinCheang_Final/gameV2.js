@@ -1,3 +1,12 @@
+/*
+Here are the sources I used:
+http://p5play.molleindustria.org/docs/index.html
+http://studio.processingtogether.com/sp/pad/export/ro.91kLmk61vAOZp/latest
+http://p5play.molleindustria.org/examples/index.html?fileName=asteroids.js
+*/
+
+
+
 var bullets;
 var enemies;
 var player;
