@@ -21,10 +21,11 @@ house=loadImage("house.jpg");//door touched
     
    //gran intro
     granblink=loadAnimation("gran.png","gran.png","gran.png","gran.png","gran.png","gran1.png","gran2.png","gran3.png","gran2.png");
+    
    // mom=loadImage("mom.png");
     
    
-//uncle intro  
+
     uncleblink=loadAnimation("uncle1.png","uncle2.png","uncle2.png","uncle2.png","uncle1.png","uncle3.png","uncle3.png","uncle3.png");
     
    //mom obstacle 
@@ -201,7 +202,6 @@ function door(){
 /*
 function keyPressed(){
 number++;
-
 }
 */
 function fun(){
@@ -214,8 +214,7 @@ switch(next){
         text("You're just in time for the family reunion!", 120, 230);
          text("Let's see who's already home...", 215, 330);
         text("Press 1 >>", 420, 580);
-			break;  // if you don't put in break statements, it will continute
-					// on and excute the next case
+			break;  
 	
             
         case 2://intro to mom
@@ -256,7 +255,7 @@ switch(next){
         
         break;
         
-        case 6: background(255); //intro to uncle
+        case 6: background(255); 
         animation(uncleblink,480,300);
         textSize(32);
               fill(0);
@@ -664,6 +663,5 @@ next=24;
    
     }
     
-
 
 
