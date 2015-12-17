@@ -1,0 +1,489 @@
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
+Minim minim;
+AudioPlayer findyou;
+PFont f; //https://processing.org/tutorials/text/
+PImage fybg;
+PImage bg1;
+int points;
+int count=0;
+//float songbeats=0;
+//float songtime;
+BeatDetect beat;
+BeatListener bl;
+int ballspeed=128;
+//float songtime=0;
+//float tempo=60/128;
+
+void setup() {
+  size(1024, 768);
+
+  f=createFont("Arial", 16, true);
+  minim=new Minim(this);
+  findyou=minim.loadFile("find you.mp3");
+  fybg=loadImage("bg1.jpg");
+  beat=new BeatDetect(findyou.bufferSize(), findyou.sampleRate());
+  beat.setSensitivity(300);
+  bl=new BeatListener(beat, findyou);
+}
+
+void draw() {
+  noStroke();
+  //song1();
+  if (count==0) {
+    select();
+  }
+  if (count>0) {
+    background(0);
+    song1();
+  }
+}
+
+void select() {
+  int selectionY;
+  background(fybg);
+  fill(199, 120, 255);
+  selectionY=height/2;
+
+  textFont(f, 16);
+  fill(255);
+  textMode(CENTER);
+  textSize(50);
+  text("Song Select", 10, 50);
+
+  textSize(16);
+  fill(199, 120, 255);
+  rect(width-200, height/2-150, 400, 100);
+  fill(0);
+  text("Zedd - Find You", width-150, height/2-100);
+
+  fill(109, 162, 255);
+  rect(width-200, height/2+150, 400, 100);
+  fill(0);
+  text("More Coming Soon~!", width-175, height/2+200);
+
+  if (mouseX>800) {
+    if ((mouseY-selectionY)<200) {
+      if (mousePressed) {
+        count++;
+      }
+    }
+  }
+}
+
+void song1() {
+  float points=0;
+  int ar=7;
+  int cs=4;
+  findyou.play();
+  frameRate(60);
+  int ballY=height/2-(ballspeed/10);
+  
+  /*fill(0);
+  rectMode(CENTER);
+  rect(mouseX, mouseY, 50, 20);
+  if((ballY==mouseY)&&(mouseX==(i+rectW))){
+    points++;
+    tpp++;
+  }else if((ballY{
+    */
+    
+
+  background(0);
+
+  float rectW = width / beat.detectSize();
+  for (int i = 0; i < beat.detectSize(); ++i)
+  {
+    // test one frequency band for an onset
+    if ( beat.isOnset(i) )
+    {
+      fill(104, 159, 255);
+      ellipse( i*rectW, height/2, 100, 100);
+      ellipse(i+rectW,ballY,10,10);
+    }
+  }
+  int lowBand = 5;
+  int highBand = 15;
+  int numberOfOnsetsThreshold = 4;
+  if ( beat.isRange(lowBand, highBand, numberOfOnsetsThreshold) )
+  {
+    fill(255, 98, 88);
+    ellipse(rectW*lowBand, height/2, (highBand-lowBand)*rectW, 400);
+  }
+}
+
+
+//pause and resume
+/*int pauseCount=0;
+ if (keyPressed) {
+ if (key==32) {
+ pauseCount++;
+ if (pauseCount>2) {
+ pauseCount=0;
+ }
+ }
+ }
+ if (pauseCount==1) {
+ findyou.pause();
+ speed=0;
+ ar=0;
+ fill(255);
+ text("Paused", width/2, height);
+ }
+ if (pauseCount==0) {
+ findyou.play();
+ speed=28.125;
+ ar=7;
+ }*/
+
+
+
+/*int songtime=millis()-1700;
+ println(songtime);
+ 
+ if (songtime==8733) {
+ //if(songtime==8){
+ circles(77, 171, true, cs, ar);
+ }
+ if (songtime==9202) {
+ circles(212, 108, false, cs, ar);
+ }
+ if (songtime==9671) {
+ circles(77, 171, true, cs, ar);
+ }
+ if (songtime==10139) {
+ circles(180, 292, false, cs, ar);
+ }
+ if (songtime==10374) {
+ circles(248, 332, true, cs, ar);
+ }
+ if (songtime==10608) {
+ circles(328, 332, true, cs, ar);
+ }
+ if (songtime==10842) {
+ circles(365, 266, false, cs, ar);
+ }
+ if (songtime==11077) {
+ circles(321, 206, false, cs, ar);
+ }
+ if (songtime==11546) {
+ circles(216, 80, true, cs, ar);
+ }
+ if (songtime==11780) {
+ circles(172, 141, false, cs, ar);
+ }
+ if (songtime==12014) {
+ circles(211, 207, true, cs, ar);
+ }
+ if (songtime==12249) {
+ circles(288, 192, true, cs, ar);
+ }
+ if (songtime==12483) {
+ circles(292, 196, true, cs, ar);
+ }
+ if (songtime==12717) {
+ circles(363, 167, false, cs, ar);
+ }
+ if (songtime==12952) {
+ circles(392, 92, true, cs, ar);
+ }
+ if (songtime==13186) {
+ circles(360, 16, false, cs, ar);
+ }
+ if (songtime==13421) {
+ circles(312, 80, true, cs, ar);
+ }
+ if (songtime==13889) {
+ circles(444, 156, true, cs, ar);
+ }
+ if (songtime==14124) {
+ circles(444, 236, false, cs, ar);
+ }
+ if (songtime==14358) {
+ circles(368, 256, true, cs, ar);
+ }
+ if (songtime==14827) {
+ circles(268, 160, true, cs, ar);
+ }
+ if (songtime==15061) {
+ circles(217, 98, false, cs, ar);
+ }
+ if (songtime==15296) {
+ circles(120, 108, true, cs, ar);
+ }
+ if (songtime==15530) {
+ circles(171, 170, false, cs, ar);
+ }
+ if (songtime==15764) {
+ circles(100, 208, true, cs, ar);
+ }
+ if (songtime==15999) {
+ circles(151, 270, false, cs, ar);
+ }
+ if (songtime==16467) {
+ circles(292, 340, true, cs, ar);
+ }
+ if (songtime==16702) {
+ circles(292, 256, true, cs, ar);
+ }
+ if (songtime==16936) {
+ circles(292, 256, true, cs, ar);
+ }
+ if (songtime==17171) {
+ circles(256, 192, false, cs, ar);
+ }
+ if (songtime==17405) {
+ circles(282, 121, false, cs, ar);
+ }
+ if (songtime==17874) {
+ circles(428, 168, true, cs, ar);
+ }
+ if (songtime==18108) {
+ circles(478, 232, false, cs, ar);
+ }
+ if (songtime==18342) {
+ circles(446, 307, false, cs, ar);
+ }
+ if (songtime==18811) {
+ circles(432, 172, true, cs, ar);
+ }
+ if (songtime==19046) {
+ circles(380, 108, true, cs, ar);
+ }
+ if (songtime==19280) {
+ circles(304, 76, false, cs, ar);
+ }
+ if (songtime==19514) {
+ circles(231, 102, false, cs, ar);
+ }
+ if (songtime==19983) {
+ circles(128, 224, true, cs, ar);
+ }
+ if (songtime==20217) {
+ circles(132, 228, true, cs, ar);
+ }
+ if (songtime==20452) {
+ circles(104, 336, false, cs, ar);
+ }
+ if (songtime==20686) {
+ circles(192, 280, true, cs, ar);
+ }
+ if (songtime==20921) {
+ circles(340, 272, false, cs, ar);
+ }
+ if (songtime==21155) {
+ circles(436, 200, true, cs, ar);
+ }
+ if (songtime==21389) {
+ circles(340, 272, false, cs, ar);
+ }
+ if (songtime==21624) {
+ circles(192, 280, true, cs, ar);
+ }
+ if (songtime==21858) {
+ circles(220, 200, true, cs, ar);
+ }
+ if (songtime==22092) {
+ circles(220, 104, false, cs, ar);
+ }
+ if (songtime==22327) {
+ circles(292, 88, true, cs, ar);
+ }
+ if (songtime==22561) {
+ circles(404, 248, false, cs, ar);
+ }
+ if (songtime==22796) {
+ circles(220, 120, true, cs, ar);
+ }
+ if (songtime==23030) {
+ circles(142, 100, true, cs, ar);
+ }
+ if (songtime==23264) {
+ circles(60, 100, false, cs, ar);
+ }
+ if (songtime==23733) {
+ circles(82, 260, true, cs, ar);
+ }
+ if (songtime==23967) {
+ circles(160, 260, false, cs, ar);
+ }
+ if (songtime==24202) {
+ circles(188, 192, true, cs, ar);
+ }
+ if (songtime==24436) {
+ circles(160, 264, false, cs, ar);
+ }
+ if (songtime==24671) {
+ circles(200, 332, false, cs, ar);
+ }
+ if (songtime==24905) {
+ circles(280, 352, false, cs, ar);
+ }
+ if (songtime==25139) {
+ circles(336, 300, true, cs, ar);
+ }
+ if (songtime==25608) {
+ circles(430, 124, true, cs, ar);
+ }
+ if (songtime==25842) {
+ circles(352, 120, false, cs, ar);
+ }
+ if (songtime==26077) {
+ circles(310, 192, false, cs, ar);
+ }
+ if (songtime==26311) {
+ circles(352, 124, true, cs, ar);
+ }
+ if (songtime==26546) {
+ circles(320, 52, true, cs, ar);
+ }
+ if (songtime==26780) {
+ circles(252, 20, true, cs, ar);
+ }
+ if (songtime==27014) {
+ circles(176, 56, false, cs, ar);
+ }
+ if (songtime==27249) {
+ circles(260, 112, true, cs, ar);
+ }
+ if (songtime==27483) {
+ circles(252, 120, true, cs, ar);
+ }
+ if (songtime==27717) {
+ circles(244, 128, true, cs, ar);
+ }
+ if (songtime==27952) {
+ circles(184, 80, false, cs, ar);
+ }
+ if (songtime==28186) {
+ circles(236, 264, true, cs, ar);
+ }
+ if (songtime==28421) {
+ circles(327, 304, true, cs, ar);
+ }
+ if (songtime==28655) {
+ circles(404, 284, false, cs, ar);
+ }
+ if (songtime==28889) {
+ circles(428, 212, false, cs, ar);
+ }
+ if (songtime==29124) {
+ circles(346, 224, true, cs, ar);
+ }
+ if (songtime==29358) {
+ circles(296, 158, false, cs, ar);
+ }
+ if (songtime==29592) {
+ circles(346, 224, true, cs, ar);
+ }
+ if (songtime==29827) {
+ circles(328, 304, true, cs, ar);
+ }
+ if (songtime==30061) {
+ circles(256, 260, false, cs, ar);
+ }
+ if (songtime==30296) {
+ circles(328, 304, true, cs, ar);
+ }
+ if (songtime==30530) {
+ circles(244, 344, true, cs, ar);
+ }
+ if (songtime==30764) {
+ circles(160, 352, false, cs, ar);
+ }
+ if (songtime==31233) {
+ circles(228, 212, true, cs, ar);
+ }
+ if (songtime==31467) {
+ circles(166, 260, false, cs, ar);
+ }
+ if (songtime==31702) {
+ circles(87, 259, true, cs, ar);
+ }
+ if (songtime==32171) {
+ circles(112, 108, true, cs, ar);
+ }
+ if (songtime==32405) {
+ circles(152, 40, false, cs, ar);
+ }
+ if (songtime==32639) {
+ circles(196, 104, true, cs, ar);
+ }
+ if (songtime==32874) {
+ circles(220, 175, false, cs, ar);
+ }
+ if (songtime==33108) {
+ circles(269, 105, true, cs, ar);
+ }
+ if (songtime==33342) {
+ circles(272, 108, true, cs, ar);
+ }
+ if (songtime==33577) {
+ circles(276, 112, false, cs, ar);
+ }
+ */
+ 
+ //Score Display
+ /*float acc=points/(tpp);
+ String s=(acc+"%");
+ fill(255);
+ //rect(10,30,400,100);
+ textSize(32);
+ text(s, 10, 30);
+ 
+  /*float lifespan=60;
+ lifespan-=60;
+ if(lifespan<0){
+ 
+ }*/
+
+/*void circles(int x, int y, boolean circlesColor, int cs, int ar) {
+ int lifespan=7-ar;
+ //int points;
+ if (circlesColor==true) {
+ stroke(255, 54, 39);
+ strokeWeight(lifespan);
+ fill(255, 0, 0);
+ if (keyPressed) {
+ key=90;
+ if (((mouseX-x)<cs)||((x-mouseX)<cs)&&((mouseY-y)<cs)||((y-mouseY)<cs)) {
+ points+=(60-lifespan);
+ stroke(0);
+ fill(0);
+ //tpp+=60;
+ }
+ }
+ }
+ if (circlesColor==false) {
+ stroke(109, 162, 255);
+ strokeWeight(lifespan);
+ fill(0, 0, 255);
+ if (keyPressed) {
+ key=88;
+ if (((mouseX-x)<cs)||((x-mouseX)<cs)&&((((mouseY-y)<cs)||((y-mouseY)<cs)))) {
+ points+=(60-lifespan);
+ stroke(0);
+ fill(0);
+ //tpp+=60;
+ }
+ }
+ }
+ ellipse(x*100, y*100, cs*10, cs*10);
+ }
+ 
+/*void pause(){
+ findyou.pause();
+ speed=0;
+ ar=0;
+ }
+ 
+ void resume(){
+ findyou.resume();
+ speed=1;
+ ar=7;
+ }*/
