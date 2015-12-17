@@ -1,6 +1,6 @@
 function Particle(pos){							//particle class for an invididual particle
-	this.velocity = createVector(1,1);
-	this.acceleration = createVector(random(-1,1), random(-1,1));
+	this.velocity = createVector(random(-20,20),5);
+	this.acceleration = createVector(0, 0);
 	this.pos = pos.copy();	
 	this.lifespan = 255;
 
@@ -14,13 +14,14 @@ Particle.prototype.run = function(){		//combines both functions for convenience
 Particle.prototype.update = function(){
 	this.velocity.add(this.acceleration);
   	this.pos.add(this.velocity);
-  	this.lifespan -= 5;
+  	this.lifespan -= 1;
 
 }
 
 Particle.prototype.display = function(){
 	fill(255);
-	ellipse(this.pos.x, this.pos.y, 10, 10);
+	ellipse(this.pos.x, this.pos.y, 10,10);
+
 
 
 }

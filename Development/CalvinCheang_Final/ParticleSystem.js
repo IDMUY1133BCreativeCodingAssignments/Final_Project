@@ -14,5 +14,9 @@ ParticleSystem.prototype.run = function() {
     if (p.dead()) {						//check to see if the particle is dead
       this.particles.splice(i, 1);		//splice = remove
     }
+    if(p.pos.x == mouseX){
+      console.log("You have died");
+    }
   }
+
 };
