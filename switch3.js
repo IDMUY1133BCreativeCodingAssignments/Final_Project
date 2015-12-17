@@ -37,28 +37,42 @@ house=loadImage("house.jpg");//door touched
     
 madmom=loadAnimation("momangry.png","momangryb.png","momangry1.png","momangry2.png", "momangry3.png","momagnry5.png");
     
+   //dad's question
     dadvideo=loadAnimation("dadtape1.png","dadtape2.png","dadtape3.png","dadtape2.png","dadtape1.png","dadtape1.png","dadtape1.png","dadtape1.png","dadtape1.png");
     
+   //dad when you say no
     saddad=loadAnimation("saddad1.png","saddad1a.png","saddad2.png","saddad3.png","saddad4.png");
     
+    //video if you say yes to dad
+    
     baby=loadAnimation("baby1.png","baby2.png","baby3.png","baby4.png");
+   
+//brother obstacle
     couch=loadAnimation("couch1.png","couch2.png","couch3.png","couch4.png","couch3.png","couch2.png","couch1.png","couch1.png","couch1.png","couch1.png","couch1.png","couch1.png");
     
+   //brother obstacle cont'd
     music=loadAnimation("notes.png","notes2.png","notes3.png","notes5.png");
 
+    //bad choice brother obstacle
 
 momstair=loadAnimation("erpples1.png","erpples2.png","erpples3.png","erpples2.png","erpples1.png","erpples1.png","erpples1.png","erpples1.png","erpples1.png","erpples1.png");
     
+   //grandma's question
     sweater=loadAnimation("sweater1.png","sweater2.png","sweater3.png","sweater4.png","sweater3.png","sweater2.png");
     
+    //bad choice to answer granny
     blur=loadAnimation("grammy3.png","grammy3.png","grammy3.png","grammy2.png","grammy1a.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png","grammy1.png");
     
+   //good choice 
     hooray=loadAnimation("hooray1.png","hooray2.png","hooray3.png","hooray2.png","hooray1.png","hooray1.png","hooray1.png","hooray1.png");
     
+//scary uncle q   
     shovel=loadAnimation("shovel1.png","shovel2.png","shovel2.png","shovel2.png","shovel1.png","shovel3.png","shovel3.png","shovel3.png","shovel1.png");
     
+   //bad choice uncle
     jail=loadAnimation("jail1.png","jail2.png","jail3.png","jail4.png","jail5.png","jail6.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png","jail7.png");
     
+    //good choice uncle
     dig=loadImage("dig.png");
     
     win=loadAnimation("win1.png","win2.png","win3.png","win4.png","win5.png","win6.png");
@@ -97,7 +111,6 @@ scene();
 		state = false;  // flip state
         
         
-        
 	}
     
 //	console.log(state);
@@ -107,13 +120,13 @@ scene();
 function scene(){
 switch(number){
 		case 1:
-        door();
-        enterHouse();
+        door();//changes switch for house
+        enterHouse();//opening screen
         break;
         
         case 2:
-        changeFamily();
-        fun();
+        changeFamily();//changes switch for everything else
+        fun();//game
        // number=0
         break;
         
@@ -128,16 +141,16 @@ function enterHouse(){
 	switch(count){
 		case 1:
 			background(255);
-            image(house);
+            image(house);//door touched
               textSize(32);
               fill(0);
             text("Click on the door", 450, 100);
             text("to enter.",475,130);
-			break;  // if you don't put in break statements, it will continute
-					// on and excute the next case
+			break;  
+					
 		case 2:
 			background(255);
-             image(house2);
+             image(house2);//door untouched
              textSize(32);
               fill(0);
             text("Click on the door", 450, 100);
@@ -147,10 +160,9 @@ function enterHouse(){
             
         case 3:
             background(255);
-            
-            //number=2;
+          
             break;
-         //default: background(0);
+        
         
             
 	
@@ -160,26 +172,26 @@ function enterHouse(){
 }
 
 function door(){
-    if(mouseX>367 && mouseX<407 && mouseY>261 && mouseY<317){
+    if(mouseX>367 && mouseX<407 && mouseY>261 && mouseY<317){//over door space
 	count=1;
 	state = true;
         //  console.log("1");
         flip=0;
     }
-    else{
+    else{//not over door
     count=2;
         state=true;
        // console.log("2");
         flip=0;
     }
-    if( state=true&& mouseX>367 && mouseX<407 && mouseY>261 && mouseY<317 && mouseIsPressed){
+    if( state=true&& mouseX>367 && mouseX<407 && mouseY>261 && mouseY<317 && mouseIsPressed){//over door and enter, switch to second part of code
       count=0;
         number=2;
         state=false;
     }
     if(number==2){
     next=1;
-        doorclose.play();
+        doorclose.play();//door sound when enter
         state2=true;
     }
 //console.log(flip);
@@ -200,13 +212,13 @@ switch(next){
               fill(0);
             text("WELCOME HOME!", 250, 200);
         text("You're just in time for the family reunion!", 120, 230);
-         text("Let's see who's home...", 220, 330);
+         text("Let's see who's already home...", 215, 330);
         text("Press 1 >>", 420, 580);
 			break;  // if you don't put in break statements, it will continute
 					// on and excute the next case
 	
             
-        case 2:
+        case 2://intro to mom
         background(255);
         animation(momblink,800/2,350);
         textSize(32);
@@ -217,7 +229,7 @@ switch(next){
         //next=1;
         //number=1;
             break;
-    case 3: background(255);
+    case 3: background(255);//intro to dad
         animation(dadblink,800/2,260);
         textSize(32);
               fill(0);
@@ -226,7 +238,7 @@ switch(next){
         
         break;
         
-         case 4: background(255);
+         case 4: background(255);//intro to bro
         animation(broblink,800/2,260);
         textSize(32);
               fill(0);
@@ -235,7 +247,7 @@ switch(next){
         
         break;
         
-          case 5: background(255);
+          case 5: background(255); //intro to granny
         animation(granblink,480,300);
         textSize(32);
               fill(0);
@@ -244,7 +256,7 @@ switch(next){
         
         break;
         
-        case 6: background(255);
+        case 6: background(255); //intro to uncle
         animation(uncleblink,480,300);
         textSize(32);
               fill(0);
@@ -254,23 +266,25 @@ switch(next){
         
         break;
         
-        case 7: background(255);
+        case 7: background(255);//instructions
         
         textSize(32);
               fill(0);
-            text("HOW TO PLAY:", 330, 200);
-         text("Today is your Family Reunion!!!", 220, 260);
-        text("But you DON'T wanna see these crazy people...", 130, 290);
+            text("HOW TO PLAY:", 330, 200-50);
+         text("Today is your Family Reunion!!!", 220, 260-50);
+        text("But you DON'T wanna see these crazy people...", 130, 290-50);
       
-        text("You have one hour to escape the madness.",130,360);
-       text("MAKE THE RIGHT CHOICES TO SAVE TIME", 110, 390);
+        text("You have one hour to escape before the rest of the family arrives.",50,360-50);
+       text("As you try to sneak out,", 300, 390-20);
+         text("MAKE THE RIGHT CHOICES TO SAVE TIME.", 150, 430-20);
+        
           
         text("3 Wrong Decisions and You Lose!", 220, 490);
          text("Press Enter >>", 620, 580);
         
         break;
         
-    case 8: background(255);
+    case 8: background(255);//mom obstacle and choice
       animation(momtater,800/2,350);
         textSize(32);
               fill(0);
@@ -294,7 +308,7 @@ switch(next){
          text("Press Enter >>",600,580);
      break;
         
-    case 10: background(255);
+    case 10: background(255);//choose second
  animation(madmom,400,350);
          textSize(32);
               fill(0);
@@ -309,7 +323,7 @@ switch(next){
         
         break;
         
-    case 11: background(255);
+    case 11: background(255); //dad obstacle
         animation(dadvideo,400, height/2);
          textSize(32);
               fill(0);
@@ -325,7 +339,7 @@ switch(next){
         //text
         break;
         
-    case 12: background(255);
+    case 12: background(255);//choice 1
         animation(saddad,400,height/2);
          textSize(32);
               fill(0);
@@ -335,7 +349,7 @@ switch(next){
          text("Press Enter >>",600,580);
         break;
         
-    case 13: background(255);
+    case 13: background(255);//choice 2
         animation(baby,400,height/2);
          textSize(32);
               fill(0);
@@ -469,6 +483,9 @@ switch(next){
         
     case 23: background(255);//lose
         animation(lose,400,height/2);
+         textSize(32);
+        fill(0);
+        text("Awww, you got more than 3 wrong!",490,430);
         break;
         
     case 24: background(255);//win
@@ -488,22 +505,24 @@ switch(next){
 
  function changeFamily(){
 
+     //states test whether or not you've completed everything you needed to before so these changes only happen when they should 
+     
      if(keyIsPressed && keyCode==49&& state2==true){
-next=2;
+next=2;//go to mom
 state2=false;
          state3=true;
   
 
 }
           if(keyIsPressed && keyCode==50 &&state3==true){
-next=3;
+next=3;//go to dad
               state3=false;
 state4=true;
  
 }
      
           if(keyIsPressed && keyCode==51&&state4==true){//
-next=4;
+next=4;//go to bro
 state4=false;
               state5=true;
  
@@ -532,7 +551,7 @@ state8=true;
 
 }
      if(keyIsPressed && keyCode==ENTER &&state8==true){
-next=8;
+next=8;//go to game part 1
               state8=false;
 state9=true;
              
@@ -541,7 +560,7 @@ state9=true;
 }
      
      if(keyIsPressed && keyCode==49 &&state9==true){//good choice
-next=9;
+next=9;//choice 1
               state9=false;
 state10=true;
              
@@ -549,7 +568,7 @@ state10=true;
 
 }
       if(keyIsPressed && keyCode==50 &&state9==true){//bad choice
-next=10;
+next=10;//choice 2
               state9=false;
 state10=true;
           score++;
@@ -586,6 +605,7 @@ next=15;
               state13=false;
           score++;
 state14=true;
+           
      }
    if(keyIsPressed && keyCode==50 &&state13==true){//good choice
 next=16;
@@ -628,17 +648,19 @@ next=22;
 state18=true;
      }
      
-     if(score>2){
+     
+     if(keyIsPressed && keyCode==13 && state18==true && score<3){//winner screen
+next=24;
+              state18=false;
+         state19=true;
+     }
+     
+     if(score>2&&keyIsPressed && keyCode==13 && state18==true){//if you lost, loser screen
          next=23;
          
          state19=true;
      }
      
-     if(keyIsPressed && keyCode==13 && state18==true && score<3){
-next=24;
-              state18=false;
-         state19=true;
-     }
    
     }
     
