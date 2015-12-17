@@ -1,4 +1,17 @@
 //REFERENCE: processing.org
+//ideas
+//how do I scale body()??
+//head gets bigger with every bite/interaction with spider
+//As game progresses, more spiders appear frequently
+//After 8 attacks, the game is over; use count 
+//background sound
+//biting sound when spider touches head
+//scream sound when bitten
+//inflating sound when head expands
+//pop sound after eighth bite 
+//head explode animation
+//head moves horizontally at bottom of screen 
+//head is controlled by left and right arrows
 
 
 Eye eye1, eye2;
@@ -12,10 +25,11 @@ int imgX, imgY;
 int bodyX, bodyY;
 float spiderRandomX ;
 float spiderRandomY ;
+float size ;
 PImage[] spiders = new PImage[1];
 
 int[] spiderX = new int[1000];
-
+float scale = 0.5;
 PImage spider;
 
 //not sure why there is an error here
@@ -34,20 +48,11 @@ for (int i = 0; i< spiderX.size()-1; i++) {  //.length() -1 ??
 //y coordinate is always 0 because all spiders start at the top
 float spiderY = 0;
 
-final int stateWelcomeScreenDisplay=0;
-final int playGame=1;
-int stateOfProgram = stateWelcomeScreenDisplay;
-
-
 void setup() {
 
   size(1000, 800);
   smooth();
   noStroke();
-
-
-  eye1 = new Eye(width/2-290, height/2-210, 70);
-  eye2 = new Eye(width/2-190, height/2-210, 70);
 
   spider =  loadImage("spider.png");
 }
@@ -55,42 +60,24 @@ void setup() {
 void draw() {
 
   background(0);
-  
-  for(int i=0; i<1000; i++){
-    spiderRandomX = random(-100, 1000);
-    spiderRandomY = random(0, 800);
+
+  for (int i=0; i<1000000; i++) {
+    spiderRandomX = random(-100, 800);
+    spiderRandomY = random(100, 800);
+    size = random(6-10);
   }
+
+  play();
 
   if (count == 0) {
     doStateWelcomeScreenDisplay();
   } else if (count == 1) {
     play();
+  } else if (count == 2) {
+    doStateWelcomeScreenDisplay();
+  } else if (count == 3) {
+    draw();
   }
-
-  //e = map(mouseX, 0, 700, 100, -100);
-
-  //spider as mouse
-  //image(spider, mouseX-50, mouseY-50, spider.width/2, spider.height/2);
-
-  //translate(e, 0);
-  //translate(0, e);
-
-  /*
-  if (mouseX<350 && mouseY<350) {
-   translate(175, 175);
-   } else if (mouseX<350 && mouseY>350) {
-   translate(175, -175);
-   } else if (mouseX>350 && mouseY<350) {
-   translate(-175, 175);
-   } else if (mouseX>350 && mouseY>350) {
-   translate(-175, -175);
-   } 
-   
-   if (mousePressed) {
-   translate(random(-300, 300), random(-300, 300));
-   }
-   
-   */
 }
 
 
@@ -100,12 +87,16 @@ void doStateWelcomeScreenDisplay() {
   stroke(255, 255, 255);
   line(500, 0, 500, 600);
   pushMatrix();
+  imageMode(CENTER);
   translate(0, random(-50, 50)); //how do I slow down this animation?
-  image(spider, 250, 370, width/2, height/2);
+  image(spider, width/2, height/2 +200, width/2, height/2);
   popMatrix();
-  textSize(50);
-  text("CLICK TO PLAY", 340, 200);   //how do I make it so text won't translate with spider?
   fill(255, 255, 255);
+  rect(300, 150, 400, 65);
+  textSize(50);
+  fill(0, 0, 0);
+  text("Click to Play", 340, 200);   //how do I make it so text won't translate with spider?
+
 
   if (mousePressed) {
     count++;
@@ -113,19 +104,15 @@ void doStateWelcomeScreenDisplay() {
 }
 
 void spiderMove() {
-  float size = random(7-10);
+
   imageMode(CENTER);
   pushMatrix();
   frameRate(4);
   for (int i=0; i<1; i++) {
     image(spider, spiderRandomX, spiderRandomY, spider.width/size, spider.height/size);
-    
   }
   popMatrix();
   //each spider moves down 50 pixels at a time until it reaches the bottom of screen
-  for (spiderY=0.0; spiderY<1000; spiderY+=50) {
-    translate(0, spiderY);
-  }
 }
 
 void keyPressed() {
@@ -155,76 +142,82 @@ void keyPressed() {
 
 
 void play() {
-
-
+  int m = millis();
   background(0);
-  //head moves horizontally at bottom of screen 
-  //head is controlled by left and right arrows
 
   keyPressed();
 
-  //how do I scale body()??
-  //head gets bigger with every bite/interaction with spider
-  //As game progresses, more spiders appear frequently
-  //After 8 attacks, the game is over; use count 
-  //background sound
-  //biting sound when spider touches head
-  //scream sound when bitten
-  //inflating sound when head expands
-  //pop sound after eighth bite 
-  //head explode animation
-
-
   body();
 
-
-  eye1.display();
-  eye2.display();
-
   spiderMove();
-  
-  loseLives();
-  
 
+
+
+  if ( human5x>1200 || human5x<-200 || human5y<-200 || human5y>1000 ) {
+    lose();
+  }
+
+
+  if (lives >= 1  && m == 60000) {   //change amount of time to 120000
+    win();
+  }
+
+  loseLives();
 }
 
 void loseLives() {
-  textSize(40);
-  text("lives:" + lives, 900, 50);   
-  fill(255, 255, 255);
-  if (spiderRandomX == human1x && spiderRandomY == human1y) {
-    lives-=1;
+  float difference1x = spiderRandomX - human1x;
+  float difference1y = spiderRandomY - human1y;
+  float difference2x = spiderRandomX - human2x;
+  float difference2y = spiderRandomY - human2y;
+  float difference3x = spiderRandomX - human3x;
+  float difference3y = spiderRandomY - human3y;
+  float difference4x = spiderRandomX - human3x;
+  float difference4y = spiderRandomY - human4y;
+  float difference5x = spiderRandomX - human5x;
+  float difference5y = spiderRandomY - human5y;
+
+
+  if (difference5x >= 4 && difference5y >= 4) {
+    lives = 8;
     textSize(40);
-    text("lives:" + lives, 900, 50);   
+    text("lives:" + lives, 800, 50);   
     fill(255, 255, 255);
-  } else if (spiderRandomX == human2x && spiderRandomY == human2y) {
+  
+  } else if (difference5x <=3 && difference5y <=3 && lives<8) {
     lives-=1;
     textSize(40);
-    text("lives:" + lives, 900, 50);   
-    fill(255, 255, 255);
-  } else if (spiderRandomX == human3x && spiderRandomY == human3y) {
-    lives-=1;
-    textSize(40);
-    text("lives:" + lives, 900, 50);   
-    fill(255, 255, 255);
-  } else if (spiderRandomX == human4x && spiderRandomY == human4y) {
-    lives-=1;
-    textSize(40);
-    text("lives:" + lives, 900, 50);   
-    fill(255, 255, 255);
-  } else if (spiderRandomX == human5x && spiderRandomY == human5y) {
-    lives-=1;
-    textSize(40);
-    text("lives:" + lives, 900, 50);   
+    text("lives:" + lives, 800, 50);   
     fill(255, 255, 255);
   }
+/*
+  for (lives=8; lives>0; lives--) {
+    if (difference5x >= 4 && difference5y >= 4) {
+      lives = 8;
+      textSize(40);
+      text("lives:" + lives, 800, 50);   
+      fill(255, 255, 255);
+    } else if (difference5x <=3 && difference5y <=3 && lives<8) {
+      lives-=1;
+      textSize(40);
+      text("lives:" + lives, 800, 50);   
+      fill(255, 255, 255);
+    } else   if (lives <= 0) {
+      break;
+      lose();
+      break;
+    }
+  }
+  */
 
-  if (lives == 0) {
+  if (lives <= 0) {
     lose();
   }
 }
 
 void body() {
+  pushMatrix();
+  scale(scale);
   translate(random(-8, 8), 0);
   translate(200, 200);
   //fill(250, 0, 60);
@@ -259,7 +252,7 @@ void body() {
   fill(0);
   ellipse(210+xx, 190+yy, 35, 40);
   ellipse(310+xx, 190+yy, 35, 40);
-  fill(242+xx, 201+yy, 178);
+  fill(255);
   ellipse(210+xx, 185+yy, 35, 40);
   ellipse(310+xx, 185+yy, 35, 40);
   line(260+xx, 185+yy, 260+xx, 260+yy);
@@ -276,6 +269,20 @@ void body() {
   line(271+xx, 320+yy, 271+xx, 350+yy);
   line(288+xx, 320+yy, 288+xx, 350+yy);
   line(305+xx, 320+yy, 305+xx, 350+yy);
+  //eye
+  fill(153);
+  ellipse(210+xx, 185+yy, 20, 20);
+  ellipse(310+xx, 185+yy, 20, 20);
+
+  /*
+  eye1 = new Eye(width/2-290+xx, height/2-210+yy, 70);    //Eye class not working
+   eye2 = new Eye(width/2-190+xx, height/2-210+yy, 70);
+   
+   eye1.update(spiderRandomX, spiderRandomY);
+   eye2.update(spiderRandomX, spiderRandomY);
+   eye1.display();
+   eye2.display();
+   */
 
 
   human1x = 140 + xx;
@@ -288,62 +295,48 @@ void body() {
   human4y = 140 + yy;
   human5x = 500 + xx;
   human5y = 400 + yy;
+
+  popMatrix();
 }
 
 
-class Eye {
+class Eye {   //not working with scale
 
   int eyeX, eyeY;
-  int size;
+  int size1;
   float angle = 0.0;
 
   Eye(int x1, int y1, int s1) {
-    eyeX = x1;
-    eyeY = y1;
-    size = s1;
+
+    eyeX = x1 ;
+    eyeY = y1 ;
+    size1 = s1;
   }
 
-  void update(int mx, int my) {
+  void update(float mx, float my) {
 
     angle = atan2(my-eyeY, mx-eyeX);
   }
 
   void display() {
-    pushMatrix();
+
     translate(eyeX, eyeY);
     fill(255);
-    ellipse(xx, yy, size, size);
+    ellipse(xx, yy, size1, size1);
     rotate(angle);
     fill(153);
-    ellipse(size/4+xx, yy, size/3, size/3);
-    popMatrix();
+    ellipse(size1/4+xx, yy, size1/3, size1/3);
   }
 }
 
 void lose() {  //this will play when player loses
   background(0);
   textSize(60);
-  text("YOU LOSE!", 340, 300);   
-  fill(255, 255, 255);
-  textSize(45);
-  text("Click to Start Over", 340, 400);   
-  fill(255, 255, 255);
-
-  if (mousePressed == true) {          
-    doStateWelcomeScreenDisplay();    //or call play()
-  }
+  text("YOU LOSE!", 340, 300);
 }
 
 void win() {  //this will appear when player wins
   background(0);
   textSize(65);
-  text("YOU WIN!", 340, 300);   
-  fill(255, 255, 255);
-  textSize(45);
-  text("Click to Play Again", 340, 400);   
-  fill(255, 255, 255);
-
-  if ( mousePressed == true) {
-    doStateWelcomeScreenDisplay();    //or call play()
-  }
+  text("YOU WIN!", 340, 300);
 }
