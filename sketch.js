@@ -4,7 +4,7 @@ var userballoons;
 var b1,b2,b3,b4,b5;
 var clouds;
 var enemies;
-var userImg,enemyImg,cloudsImg,balloon1Img,balloon2Img,balloon3Img,balloon4Img,balloon5Img;
+var userImg,enemyImg,cloudsImg,balloon1Img,balloon2Img,balloon3Img,balloon4Img,balloon5Img,trumpImg;
 var gameover;
 var birdrate=100;
 var points=0;
@@ -23,6 +23,7 @@ function setup(){
     balloon4Img=loadImage("data/balloon4.png");
     balloon5Img=loadImage("data/balloon5.png");
     bgImg=loadImage("data/bg.png");
+    trumpImg=loadImage("data/trump.png");
     
     user=createSprite(width/2,500,50,50); //USER SPRITE
     user.addImage(userImg);
@@ -92,7 +93,9 @@ function draw(){
         
         if (frameCount%birdrate===0 && unpaused){//creating bird enemies every 70 frames
             var enemy=createSprite(random(width),user.position.y-height);
+            enemy.addImage("makeAmericaGreatAgain",trumpImg);
             enemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");
+            enemy.changeAnimation("flying");
             var s=int(random(userballoons.length));
             enemy.attractionPoint(5,userballoons[s].position.x,userballoons[s].position.y);
             if (enemy.getDirection()>=90 || enemy.getDirection()<=180){
@@ -166,6 +169,13 @@ function draw(){
             updateSprites(true);
             console.log("no");
             unpaused=true;
+        }
+    }
+    
+    if (keyWentDown("t")){
+        for(i=0;i<enemies.length;i++){
+            enemies[i].changeImage("makeAmericaGreatAgain");
+            console.log('hi');
         }
     }
     
