@@ -37,7 +37,7 @@ Candle.prototype.breatheDisplay = function(colorFill, colorFill1){
     background(180);
     noStroke();
     push();
-    fill(colorFill);
+    fill(colorFill, 50);
     translate(14, this.translateY);
     triangle(windowWidth/2 + 1, windowHeight/2-60, windowWidth/2 + 39, windowHeight/2 - 60, windowWidth/2 + 20, windowHeight/2-100);
     ellipse(windowWidth/2 + 20, windowHeight/2 - 60, 35, 40);
@@ -49,15 +49,6 @@ Candle.prototype.breatheDisplay = function(colorFill, colorFill1){
     pop();
 }
 
-Candle.prototype.action = function(){
-    
-    
-}
-
-Candle.prototype.actionDisplay = function(){
-    
-    
-}
 Candle.prototype.playSong = function(song){
     song.play();
     song.loop();

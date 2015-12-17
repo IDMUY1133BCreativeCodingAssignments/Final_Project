@@ -8,7 +8,6 @@
 function Boundary(x_,y_, w_, h_) {
   // But we also have to make a body for box2d to know about it
   // Body b;
-  console.log("Created Boundary");
   this.x = x_;
   this.y = y_;
   this.w = w_;
@@ -30,7 +29,7 @@ function Boundary(x_,y_, w_, h_) {
 
     // Draw the boundary, if it were at an angle we'd have to do something fancier
   this.display = function() {
-    fill(127);
+    fill(200);
     stroke(200);
     rectMode(CENTER);
     rect(this.x,this.y,this.w,this.h);

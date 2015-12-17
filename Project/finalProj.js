@@ -89,7 +89,7 @@ var flames;
 var experiment; 
 var button;
 
-var bubbLocY = windowHeight/2; //deleting this makes the program fail, why ? 
+//var bubbLocY = windowHeight/2; //deleting this makes the program fail, why ? 
 
 //all the sound variables
 var fireSound;
@@ -142,25 +142,25 @@ function draw(){
     if(balloonPressed){ 
         testBalloon.breathe();
         testBalloon.breatheDisplay(red);
-            displaySeconds(); 
+        displaySeconds(); 
 
     }
     if(flowerPressed){
         testFlower.breathe(mint, red);
         testFlower.breatheDisplay(yellow);
-            displaySeconds(); 
+        displaySeconds(); 
 
     }
     if(flamesPressed){
         testCandle.breathe();
         testCandle.breatheDisplay(yellow, red);
-            displaySeconds(); 
+        displaySeconds(); 
 
     }
     if(bubblesPressed){
         testBubble.breathe();
         testBubble.breatheDisplay(blue, lightblue);
-            displaySeconds(); 
+        displaySeconds(); 
 
     }
     if(expPressed){ //get rid of all the particles when you leave ? 
@@ -169,7 +169,7 @@ function draw(){
         push();
         fill(255);
         textSize(15);
-        text(" Left Arrow: Air \n Right Arrow: Earth \n Up Arrow: Water \n Down Arrow: Fire", 15, 40);
+        text(" Left Arrow: Air \n Right Arrow: Earth \n Up Arrow: Water \n Down Arrow: Fire \nBackspace to clear the screen!", 15, 40);
         pop();
         var timeStep = 1.0/30;
         // 2nd and 3rd arguments are velocity and position iterations
@@ -245,7 +245,8 @@ it also restarts all the values
 
 function baPressed(){
     testBalloon.reset();
-    adjustSong(airSound);
+    //adjustSong(airSound);
+    stopOthers(airSound);
     //translateY = 10;
     //run = 1;
     balloonPressed = true;
@@ -257,7 +258,7 @@ function baPressed(){
 
 function buPressed(){
     testBubble.reset(bubbleSound);
-    adjustSong(bubbleSound);
+    stopOthers(waterSound);
     bubblesPressed = true;
     balloonPressed = false;
     flamesPressed = false;
@@ -268,7 +269,7 @@ function buPressed(){
 
 function fPressed(){
     testCandle.reset();
-    adjustSong(fireSound);
+    stopOthers(fireSound);
     flamesPressed = true;
     balloonPressed = false;
     flowerPressed = false;
@@ -278,7 +279,7 @@ function fPressed(){
 
 function floPressed(){
     testFlower.reset();
-    adjustSong(earthSound);
+    stopOthers(earthSound);
     flowerPressed = true;
     flamesPressed = false;
     balloonPressed = false;
@@ -295,14 +296,15 @@ function exPressed(){
     expPressed = true;
 }
 
-function adjustSong(theSong){ //find out how to get a song playing at the time stop playing 
-    if(theSong.isPlaying()){
-      theSong.stop();   
-    }
-    theSong.play();
-    theSong.loop();
+function stopOthers(keep){
+    airSound.stop();
+    fireSound.stop();
+    waterSound.stop();
+    earthSound.stop();
+    bubbleSound.stop();
+    keep.play();
+    
 }
-
 function displaySeconds(){ //shows timer for guidance 
     push();
     fill(255);
@@ -322,23 +324,33 @@ function hideSeconds(){
 }
 
 function keyPressed(){ //changes colors of particles in experimental room 
-   if(keyCode === LEFT_ARROW){
+   if(keyCode == LEFT_ARROW){
         particleColor = white;
         type = 0;
     }
     
-    if(keyCode === RIGHT_ARROW){
+    if(keyCode == RIGHT_ARROW){
         particleColor = greenEx;
         type = 1; 
     }
     
-    if(keyCode === UP_ARROW){
+    if(keyCode == UP_ARROW){
         particleColor = blueEx;
         type = 2;
     }
     
-    if(keyCode === DOWN_ARROW){
+    if(keyCode == DOWN_ARROW){
         particleColor = orangeEx;
         type = 3;
     }
+    
+    if(keyCode == BACKSPACE){
+        for (var i = particles.length-1; i >= 0; i--) {
+            particles[i].remove();
+        //fill(160); trying to make particles disaPPEAR 
+        //rect(40, 40, windowWidth/2, windowHeight/2 - 2);
+    }
+      
+    }
 }
+

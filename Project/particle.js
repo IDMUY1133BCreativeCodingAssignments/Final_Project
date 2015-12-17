@@ -7,7 +7,6 @@
 // Constructor
 function Particle(x,y,r, _color, type) {
   this.r = r;
-  console.log("Particles pushing");
   this.col = _color;
   this.type = type;
 
@@ -54,12 +53,16 @@ function Particle(x,y,r, _color, type) {
        if(this.r >= 0){ //shrinks fire particle
            this.r = this.r - 1;
       }
+          if(this.r <= 1){   
+              this.col = color(160);
+           this.type = 4; //"ashes" after it reaches certain size
+       }
+      }
       if(_type1 == "Air"){
           this.body.SetAngularVelocity(random(-100, 100));
           this.body.SetLinearVelocity(new box2d.b2Vec2(random(-20, 20) , random(-20, 20)));
       } 
           //this.col = color(255, 0, 0);
-  }
   }
  
   this.changeOther = function(_type2){
@@ -69,7 +72,7 @@ function Particle(x,y,r, _color, type) {
          }
       }
       if(_type2 == "FiEa"){ //particle 1 is fire, particle 2 is earth
-          this.col = color(235, 173, 86);   
+          this.col = color(235, 173, 86);  //color distinction tells u if it used to be earth 
           this.type = 3;
       }
       
@@ -77,7 +80,10 @@ function Particle(x,y,r, _color, type) {
            if(this.r >= 0){ //shrinks fire particle
            this.r = this.r - 1;
       }
-          
+       if(this.r <= 1){   
+        this.col = color(160);
+           this.type = 4; //"ashes"
+       }
       }
       if(_type2 == "Air"){
           this.body.SetAngularVelocity(random(-100, 100));
@@ -88,11 +94,6 @@ function Particle(x,y,r, _color, type) {
   
   this.getRelationship = function(_type1, _type2){
     this.relation = "NA";
-      //air = 0;
-      //earth = 1;
-      //water = 2;
-      //fire = 3; 
-      
       if(_type1 == 1 && _type2 == 2){ //earth & water
           this.relation = "EaWa";
       }
@@ -151,11 +152,25 @@ function Particle(x,y,r, _color, type) {
     translate(pos.x,pos.y);
     rotate(a);
     fill(this.col);
-    stroke(200);
+    stroke(0, 70);
     strokeWeight(2);
-    ellipse(0,0,this.r*2,this.r*2);
+    //var which = int(random(0, 1));
+    //switch(which){
+      //  case 0:
+      if(this.type == 1 || this.type == 3){
+        rect(0, 0, this.r*2, this.r*2);
+      }
+      if(this.type == 0 || this.type == 2){
+        ellipse(0, 0, this.r*2, this.r*2);
+   //         break;
+     //   case 1:
+       // rect(0, 0, this.r*2,this.r*2);
+         //break;
     // Let's add a line so we can see the rotation
-    line(0,0,this.r,0);
-    pop();
   }
+  pop();
+  }
+  this.remove = function(){
+      this.killBody();
+}
 }
