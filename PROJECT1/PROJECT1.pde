@@ -203,7 +203,6 @@ void loseLives() {
       text("lives:" + lives, 800, 50);   
       fill(255, 255, 255);
     } else   if (lives <= 0) {
-      break;
       lose();
       break;
     }
