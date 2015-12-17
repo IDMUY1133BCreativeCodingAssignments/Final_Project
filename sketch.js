@@ -11,6 +11,7 @@ var points=0;
 var ballooncolors;
 var fakeEnemy;
 var unpaused;
+var trump;
 
 function setup(){
 	createCanvas(400,600);
@@ -21,16 +22,16 @@ function setup(){
     balloon2Img=loadImage("data/balloon2.png");
     balloon3Img=loadImage("data/balloon3.png");
     balloon4Img=loadImage("data/balloon4.png");
-    balloon5Img=loadImage("data/balloon5.png");
-    bgImg=loadImage("data/bg.png");
-    trumpImg=loadImage("data/trump.png");
+    balloon5Img=loadImage("data/balloon5.png");//diff color balloon for specific balloon placed
+    bgImg=loadImage("data/bg.png");//background image
+    trumpImg=loadImage("data/trump.png");//secret
     
     user=createSprite(width/2,500,50,50); //USER SPRITE
     user.addImage(userImg);
     user.velocity.y=-6;// the rate of user going up
    
-    userballoons = new Group();
-    b1 = createSprite(user.position.x-30,user.position.y-100,30,30);
+    userballoons = new Group();//group of sprites, my balloons
+    b1 = createSprite(user.position.x-30,user.position.y-100,30,30);//bottom left, across to right
     b1.addImage(balloon1Img);
     userballoons.add(b1);
     b2 = createSprite(user.position.x,user.position.y-100,30,30);
@@ -39,23 +40,24 @@ function setup(){
     b3 = createSprite(user.position.x+30,user.position.y-100,30,30);
     b3.addImage(balloon3Img);
     userballoons.add(b3);
-    b4 = createSprite(user.position.x-15,user.position.y-115,30,30);
+    b4 = createSprite(user.position.x-15,user.position.y-115,30,30);//top left, across to right
     b4.addImage(balloon4Img);
     userballoons.add(b4);
     b5 = createSprite(user.position.x+15,user.position.y-115,30,30);
     b5.addImage(balloon5Img);
     userballoons.add(b5);
     
-    for (i=0;i<userballoons.length;i++){
-        userballoons[i].velocity.y=-6;//same rate as the user
+    for (i=0;i<userballoons.length;i++){//set balloon speed same as user
+        userballoons[i].velocity.y=user.velocity.y;
     }
     
-    clouds= new Group();
-    enemies= new Group();
-    gameover=true;
-    updateSprites(false);
-    onetimeonly=true;
-    unpaused=true;
+    clouds= new Group();//group for clouds
+    enemies= new Group();//group for enemies
+    gameover=true;//start off as true in order to have user prompt when to begin
+    updateSprites(false);//^
+    onetimeonly=true;//control for how bird rate management
+    unpaused=true;//game starts out not paused
+    trump=false;
     
     camera.position.x=width/2;
     
@@ -64,11 +66,11 @@ function setup(){
 function draw(){
     
     if(gameover && keyWentDown(ENTER))
-        newGame();
+        newGame();//allow user to begin by enter key
     
     if(!gameover) {
     
-        if (keyDown(LEFT_ARROW) && unpaused){
+        if (keyDown(LEFT_ARROW) && unpaused){//user steer left
             user.position.x=constrain(user.position.x-pos,15+user.width/2,width-user.width/2);
             b1.position.x=constrain(b1.position.x-pos,b1.width/2,width-b1.width/2);
             b2.position.x=constrain(b2.position.x-pos,30+b2.width/2,width-b2.width/2);
@@ -76,7 +78,7 @@ function draw(){
             b4.position.x=constrain(b4.position.x-pos,15+b4.width/2,width-b4.width/2);
             b5.position.x=constrain(b5.position.x-pos,45+b5.width/2,width-b5.width/2);
         }
-        if (keyDown(RIGHT_ARROW) && unpaused){
+        if (keyDown(RIGHT_ARROW) && unpaused){//user steer right
             user.position.x=constrain(user.position.x+pos,user.width/2,width-15-user.width/2);
             b1.position.x=constrain(b1.position.x+pos,b1.width/2,width-60-b1.width/2);
             b2.position.x=constrain(b2.position.x+pos,b2.width/2,width-30-b2.width/2);
@@ -85,7 +87,7 @@ function draw(){
             b5.position.x=constrain(b5.position.x+pos,b5.width/2,width-15-b5.width/2);
         }
         
-        if (frameCount%50===0 && unpaused){
+        if (frameCount%50===0 && unpaused){//vertical scroll
             var cloud=createSprite(random(width),user.position.y-height,100,50);
             cloud.addImage(cloudsImg);
             clouds.add(cloud);
@@ -93,27 +95,31 @@ function draw(){
         
         if (frameCount%birdrate===0 && unpaused){//creating bird enemies every 70 frames
             var enemy=createSprite(random(width),user.position.y-height);
-            enemy.addImage("makeAmericaGreatAgain",trumpImg);
-            enemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");
+            enemy.addImage("makeAmericaGreatAgain",trumpImg);//secret
+            enemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");//bird anim
+            if (trump){
+                enemy.changeAnimation("makeAmericaGreatAgain");
+            }
+            else{
             enemy.changeAnimation("flying");
-            var s=int(random(userballoons.length));
+            }
+            var s=int(random(userballoons.length));//birds will target balloons
             enemy.attractionPoint(5,userballoons[s].position.x,userballoons[s].position.y);
             if (enemy.getDirection()>=90 || enemy.getDirection()<=180){
-                enemy.mirrorX(-1);
+                enemy.mirrorX(-1);//based on direction, the bird will face certain direction
             }
             if (enemy.getDirection()<90){
                 enemy.mirrorX(1);
             }
-            console.log(enemy.getDirection());
-            enemies.add(enemy);
+            enemies.add(enemy);//bird as group of sprites
         }
-        if(frameCount%5===0 && unpaused){
+        if(frameCount%5===0 && unpaused){//point increase every 5 frames
             points+=1;
         }
-        if (points%50===0 && points>0 && onetimeonly){//possible leveling of birds
-            birdrate-=5
+        if (points%50===0 && points>0 && onetimeonly){//leveling of birds
+            birdrate-=5//every 50 points, # of frames per new bird creation will dec (rate faster)
             
-            onetimeonly=false;
+            onetimeonly=false;//allow only once every 50 points
         }
         if (points%50!=0){
             onetimeonly=true;
@@ -131,19 +137,19 @@ function draw(){
         }//close for
     }
 
-    camera.position.y=user.position.y-190;
+    camera.position.y=user.position.y-190;//follow the user/balloons
     
-    camera.off();
+    camera.off();//background image is still
     background(bgImg);
     camera.on();
     
-    enemies.overlap(userballoons,birdHit);
+    enemies.overlap(userballoons,birdHit);//detect overlap of bird with balloons
     
-    drawSprites(clouds);
+    drawSprites(clouds);//draw al sprite and sprite groups
     drawSprites(enemies);
     drawSprite(user);
     drawSprite(fakeEnemy);
-    tint(255,180);
+    tint(255,180);//translucent balloons
     drawSprites(userballoons);
     
     noStroke();//ground floor
@@ -153,34 +159,30 @@ function draw(){
     fill(0);
     textSize(36);
     textAlign(CENTER);
-    text(str(points),width/2,user.position.y-400);
+    text(str(points),width/2,user.position.y-400);//display points
     textSize(12);
-    text("Press SPACE or P to pause.",width/2,user.position.y-450);
+    text("Press SPACE or P to pause.",width/2,user.position.y-450);//pausing info
     fill(255);
     textSize(28);
-    text("PRESS ENTER TO START",width/2,height-50);
+    text("PRESS ENTER TO START",width/2,height-50);//enter to start info
     
-    if (keyWentDown(32)||keyWentDown(80)){
-        if (unpaused){
+    if (keyWentDown(32)||keyWentDown(80)){//actual pause function
+        if (unpaused){//PAUSE
             updateSprites(false);
             unpaused=false;
         }
-        else{
+        else{//UNPAUSE
             updateSprites(true);
-            console.log("no");
             unpaused=true;
         }
     }
     
-    if (keyWentDown("t")){
-        for(i=0;i<enemies.length;i++){
-            enemies[i].changeImage("makeAmericaGreatAgain");
-            console.log('hi');
-        }
+    if (keyWentDown("t")){//secret 
+        trump=true;
     }
     
     
-    if (userballoons.length===0){
+    if (userballoons.length===0){//game over when all ballloons have "popped"
         updateSprites(false);
         gameover = true;
         var wait=millis();
@@ -188,17 +190,19 @@ function draw(){
             fill(255,0,0);
             textSize(36);
             textAlign(CENTER);
-            text("GAME OVER",width/2,user.position.y-190);
+            text("GAME OVER",width/2,user.position.y-190);//game over text
             textSize(22);
             text("Play Again? Press Enter.",width/2,user.position.y-170);
             }
         }
+    //console.log(user.velocity.y);
 
 
 }//close draw
 
-function newGame() {
+function newGame() {//resetting values for new game
     enemies.removeSprites();
+    clouds.removeSprites();
     gameover = false;
     updateSprites(true);
     user.position.x = width/2;
@@ -206,7 +210,7 @@ function newGame() {
     user.velocity.y=-6;
     birdrate=100;
     points=0;
-    if( userballoons.length===0){
+    if( userballoons.length===0){//if statement for the case of first game
     b1 = createSprite(user.position.x-30,user.position.y-100,30,30);
     b1.addImage(balloon1Img);
     userballoons.add(b1);
@@ -223,23 +227,26 @@ function newGame() {
     b5.addImage(balloon5Img);
     userballoons.add(b5);
     for (i=0;i<userballoons.length;i++){
-        userballoons[i].velocity.y=-6;//same rate as the user
+        userballoons[i].velocity.y=user.velocity.y;//same rate as the user
         }
     }
     unpaused=true;
 }
 
-function birdHit(enemy,userballoons){
+function birdHit(enemy,userballoons){//if two collide, balloon pops, enemy disappears
     userballoons.remove();
     var dir=enemy.getDirection();
     var enemyX=enemy.position.x;
     var enemyY=enemy.position.y;
-    console.log(enemies.contains(enemy));
     enemy.remove();
-    fakeEnemy=createSprite(enemyX,enemyY);
-    fakeEnemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");
+    fakeEnemy=createSprite(enemyX,enemyY);//"enemy" flying away, though technically removed from sprite group
+    if (trump){
+        fakeEnemy.addImage("makeAmericaGreatAgain", trumpImg);
+    }
+    else{
+    fakeEnemy.addAnimation("flying","data/birdie0001.png","data/birdie0006.png");}
     fakeEnemy.setSpeed(20,-dir);
-    if (dir>=90 || dir<=180){
+    if (dir>=90 || dir<=180){//fly opp direct it came from, facing correct side
         fakeEnemy.mirrorX(-1);
         }
     if (dir<90){
