@@ -1,7 +1,6 @@
 int x = 100;
 int sub = 1;
  
-Wwitch == true;
 
 
 void setup() {
@@ -23,8 +22,5 @@ void draw() {
     x = x;
   } if ( x <= 0)
   x = 0;
-  println( x + "%");
+  println(x);
 }
-
-
-void trans();
